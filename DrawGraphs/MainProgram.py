@@ -11,7 +11,7 @@
 
 import numpy as np
 import turtle,tkinter,math
-print("hello callum")
+
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
 #but the advantage of doing just import tkinter is that it's technically "cleaner" code as you don't risk possible 
 #conflicts in large programs with many imports - e.g., your "neoMaths" mod also has function called Frame for some reason
