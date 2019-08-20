@@ -1,4 +1,6 @@
 #python integration testing
+#does linear regression on the user's CSV file using R and passes the results back to python
+#python passes in the CSV file and gets a result back from R
 import subprocess
 import os
 import re
