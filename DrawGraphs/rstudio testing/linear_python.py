@@ -5,6 +5,7 @@ import subprocess
 import os
 import re
 path1=os.path.dirname(os.path.realpath(__file__)) #Gets the path for the current program
+print(path1)
 csvin=input("Give a csv file: ")
 cmd=["Rscript","linear_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 #lil batch script run from python
