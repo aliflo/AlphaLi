@@ -1,0 +1,9 @@
+csvfile<-read.csv(file="testdata.csv",header=TRUE)
+expo<-lm(log(x)~y,data=csvfile)
+expo
+b<-expo$coefficients[["(Intercept)"]]
+m<-expo$coefficients[["speed"]]
+A<-10^m
+r<-10^b
+A
+r
