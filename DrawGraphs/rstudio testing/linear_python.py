@@ -6,7 +6,7 @@ import os
 import re
 path1=os.path.dirname(os.path.realpath(__file__)) #Gets the path for the current program
 csvin=input("Give a csv file: ")
-cmd=["Rscript","rtesting.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
+cmd=["Rscript","linear_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 #lil batch script run from python
 x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
 #which is the output of the final line of rtesting.r (the linear regression coefficients). universal_newlines forces it to work with linux and windows line endings
