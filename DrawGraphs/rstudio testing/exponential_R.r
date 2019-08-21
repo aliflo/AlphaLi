@@ -1,9 +1,5 @@
+setwd("~/Documents/EPQ/GitPath/DrawGraphs/rstudio testing")
 csvfile<-read.csv(file="testdata.csv",header=TRUE)
-expo<-lm(log(x)~y,data=csvfile)
+
+expo<-nls(y~I(a*exp(b*x)),data=csvfile, start=list(a=1,b=1))
 expo
-b<-expo$coefficients[["(Intercept)"]]
-m<-expo$coefficients[["speed"]]
-A<-10^m
-r<-10^b
-A
-r
