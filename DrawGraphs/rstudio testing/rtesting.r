@@ -8,4 +8,6 @@ formula1 <- as.formula(paste(as.name(colnames(csvfile)[1])," ~ ",as.name(colname
 #name (as.name) column names (colnames) as the first column name of the csv file 
 #Tilde means "do regresssion on these two columns" in R formula notation 
 #second column is the column name of the second column
-lm(formula1, data=csvfile)$coefficients #Returns the regression of that formula ($coefficients makes it so only the relevant bits are passed in)
+lm(formula1, data=csvfile)$coefficients 
+#Returns the regression of that formula ($coefficients makes it so only the relevant bits are passed in, i.e. the coefficients of x and c)
+#in the python program they are referred to as "gradient" and "intercept"
