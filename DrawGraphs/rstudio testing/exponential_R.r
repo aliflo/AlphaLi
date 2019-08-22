@@ -1,12 +1,10 @@
-#pyin <- commandArgs(trailingOnly=TRUE)
-#setwd(pyin[2])
-setwd("~/Documents/EPQ/GitPath/DrawGraphs/rstudio testing")
-#csvfile <- read.csv(file=pyin[1])
-csvfile <- read.csv("testdata.csv")
+pyin <- commandArgs(trailingOnly=TRUE)
+setwd(pyin[2])
+csvfile <- read.csv(file=pyin[1])
 col1<-unlist(lapply(csvfile[colnames(csvfile)[1]], log))
 col2<-unlist(lapply(csvfile[colnames(csvfile)[2]], log))
 a_start<-as.numeric(summary(lm(col2~col1))$coefficients[2])
 b_start<-as.numeric(summary(lm(col2~col1))$coefficients[4])
-f=as.formula(paste(as.name(colnames(csvfile)[1]),"~I(a*exp(b*",as.name(colnames(csvfile[2])),"))"))
-expo<-nls(f,data=csvfile, start=list(a=a_start,b=b_start))
-#Fits y and x to the model of y=ae^bx
+f=as.formula(paste(as.name(colnames(csvfile)[2]),"~I(a*exp(b*",as.name(colnames(csvfile[1])),"))"))
+expo<-nls(f,data=csvfile, start=list(a=exp(a_start),b=b_start))
+expo
