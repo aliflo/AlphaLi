@@ -1,8 +1,0 @@
-Use this plaintext file to leave roadmaps, notes, etc. idk just using it for notes on mathematical series stuff.
-
-to research
-- taylor series
-- finding nth term of cubic and quartic sequences
-- https://math.stackexchange.com/questions/2987612/estimating-an-equation-from-a-series-of-values
-revisit the above later
-- https://en.wikipedia.org/wiki/Regression_analysis
