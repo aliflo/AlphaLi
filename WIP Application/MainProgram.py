@@ -206,15 +206,15 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__manualIcon=tkinter.PhotoImage(file="Icons/manualIcon.gif")#the images are 1-frame gifs, so effectively just use the file format.
 		self.__clearIcon=tkinter.PhotoImage(file="Icons/clearIcon.gif")
 		self.__equationIcon=tkinter.PhotoImage(file="Icons/equationIcon.gif")
-		self.__colourButton = tkinter.Button(self.__root,image=self.__colourIcon,width=32,height=32,command=self.colourButtonCallback)#a button to change the colour of the turtle
+		self.__colourButton = tkinter.Button(self.__root,image=self.__colourIcon,width=32,height=32,command=self.colourButtonCallback, highlightthickness=0, bd=0)#a button to change the colour of the turtle
 		self.__colourButton.grid(row=1,column=0)
-		self.__regressionButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert)
+		self.__regressionButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0)
 		self.__regressionButton.grid(row=2,column=0)
-		self.__equationEntryButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues)
+		self.__equationEntryButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0)
 		self.__equationEntryButton.grid(row=3,column=0)
-		self.__clearCanvasButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas)
+		self.__clearCanvasButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0)
 		self.__clearCanvasButton.grid(row=4)
-		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual)
+		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0)
 		self.__manualButton.grid(row=19)
 	def colourButtonCallback(self): #a subroutine for changing the colour of the pen
 		#self.__colourinwindow=tkinter.Toplevel(self.__root)
