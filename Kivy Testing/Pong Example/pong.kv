@@ -1,0 +1,60 @@
+#:kivy 1.11.1
+#REMEMBER NO INLINE COMMENTS
+#creates rules  that the PongBall class will have to follow
+<PongBall>:
+    size: 30, 30 
+    canvas:
+        Ellipse:
+            pos: self.pos
+            size: self.size
+ #makes an ellipse of size 30x30 pixels and sets its position to be defined by the program   
+<PongPaddle>:
+    size: 15,100
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size 
+            #Creates the pong paddles as rectangles
+<PongGame>:
+#Following rules apply to the PongGame class
+    ball: pong_ball
+    player1: player_left
+    player2: player_right
+    canvas: 
+    #creates a canvas for graphics
+        Rectangle: 
+        #creates a rectangle with centre -5,0
+            pos: self.center_x - 5, 0
+            size: 10, self.height
+            #sets the width to 10 and the height to be defined by the window
+    
+    Label: 
+    #makes a text label
+        font_size: 70 
+        #font size of 70
+        center_x: root.width / 4 
+        #centre a quarter of the width
+        top: root.top - 50 
+        #it's top is 50 pixels from the top
+        text: "0"
+        #text is "0"
+        
+    Label:
+        font_size: 70  
+        center_x: root.width * 3 / 4
+        top: root.top - 50
+        text: "0"
+    
+    PongBall:
+        id: pong_ball 
+        #assigns the ball an id of pong_ball
+        center: self.parent.center 
+        #sets its center to whatever was defined before
+    PongPaddle:
+        id: player_left
+        x: root.x
+        center_y: root.center_y
+    PongPaddle:
+        id: player_right
+        x: root.width-self.width
+        center_y: root.center_y
