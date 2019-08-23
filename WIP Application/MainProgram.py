@@ -10,7 +10,7 @@
 #scrolling/zooming in the canvas
 
 import numpy as np
-import turtle,tkinter,math, os
+import turtle,tkinter,math
 
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
 #but the advantage of doing just import tkinter is that it's technically "cleaner" code as you don't risk possible 
@@ -200,22 +200,21 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.penup()
 		self.__pen2.goto(-1,0)
 	def buttons(self):
-		path1=os.path.dirname(os.path.realpath(__file__))
 		self.__colourIcon = tkinter.PhotoImage(file="Icons/colourIcon.gif")#lines 183-7 create saved variables of the icons we use for the buttons.
 		self.__tableIcon=tkinter.PhotoImage(file="Icons/tableIcon.gif")#the file format is gif as that is naturally supported by the PhotoImage function in tkinter.
 		self.__manualIcon=tkinter.PhotoImage(file="Icons/manualIcon.gif")#the images are 1-frame gifs, so effectively just use the file format.
 		self.__clearIcon=tkinter.PhotoImage(file="Icons/clearIcon.gif")
 		self.__equationIcon=tkinter.PhotoImage(file="Icons/equationIcon.gif")
 		self.__colourButton = tkinter.Button(self.__root,image=self.__colourIcon,width=32,height=32,command=self.colourButtonCallback, highlightthickness=0, bd=0)#a button to change the colour of the turtle
-		self.__colourButton.grid(row=1,column=0)
+		self.__colourButton.grid(row=0,column=0, sticky="n",pady=0)
 		self.__regressionButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0)
-		self.__regressionButton.grid(row=2,column=0)
+		self.__regressionButton.grid(row=1,column=0, sticky="n",pady=0)
 		self.__equationEntryButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0)
-		self.__equationEntryButton.grid(row=3,column=0)
+		self.__equationEntryButton.grid(row=2,column=0, sticky="n",pady=0)
 		self.__clearCanvasButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0)
-		self.__clearCanvasButton.grid(row=4)
+		self.__clearCanvasButton.grid(row=3, sticky="n",pady=0)
 		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0)
-		self.__manualButton.grid(row=19)
+		self.__manualButton.grid(row=19, sticky="s",pady=0)
 	def colourButtonCallback(self): #a subroutine for changing the colour of the pen
 		#self.__colourinwindow=tkinter.Toplevel(self.__root)
 		#self.__colourinwindow.bind("<Return>",self.colour)
