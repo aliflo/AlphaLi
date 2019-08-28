@@ -10,8 +10,8 @@
 #scrolling/zooming in the canvas
 
 import numpy as np
-import turtle,tkinter,math,os
-from PIL import Image, ImageTk
+import turtle,tkinter,math,os,webbrowser
+from PIL import Image, ImageTk, ImageFilter
 
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
 #but the advantage of doing just import tkinter is that it's technically "cleaner" code as you don't risk possible 
@@ -28,9 +28,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__coolblue="#46ACC2"
 		self.__canvas = tkinter.Canvas(master = self.__root, width = 500, height = 500)#creates a TKINTER canvas, not
 		#a turtle one, with specifications 500*500. Possible TODO - make the screen size scale to the user's pc using winfo.getwidth?
-		self.__sideBarCanvas=tkinter.Canvas(master=self.__root,width=52,height=500,bg=self.__coolblue,highlightthickness=0)
+		self.__sideBarCanvas=tkinter.Canvas(master=self.__root,width=66,height=500,bg=self.__coolblue,highlightthickness=0)
 		self.__sideBarCanvas.grid(row=0,column=0,rowspan=500)
-		self.__canvas.grid(column=1,row=0,columnspan=20,rowspan=500)#puts the canvas on the grid, in the window
+		self.__canvas.grid(column=1,row=0,columnspan=20,rowspan=125)#puts the canvas on the grid, in the window
 		self.__screen = turtle.RawTurtle(self.__canvas)#now creates a RawTurtle class instance, which makes a window
 		self.__pen2=turtle.RawTurtle(self.__canvas)
 		self.__pen2.speed(0)
@@ -202,32 +202,34 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.clear()
 		self.__pen2.penup()
 		self.__pen2.goto(-1,0)
-	def createIcons(self):
-		self.__iconlist=[]
-		for i in os.listdir("Icons/"):
-			i=Image.open("Icons/"+str(i)).resize((50,50),Image.ANTIALIAS)
-			self.__iconlist.append(ImageTk.PhotoImage(i))
-		return self.__iconlist
 	def buttons(self):
 		os.chdir("WIP Application/")
-		self.__iconlist=self.createIcons()
-		self.__colourIcon = tkinter.PhotoImage(file=self.__iconlist[1])#lines 183-7 create saved variables of the icons we use for the buttons.
-		self.__tableIcon=tkinter.PhotoImage(file="Icons/tableIcon.gif")#the file format is gif as that is naturally supported by the PhotoImage function in tkinter.
-		self.__manualIcon=tkinter.PhotoImage(file="Icons/manualIcon.gif")#the images are 1-frame gifs, so effectively just use the file format.
-		self.__clearIcon=tkinter.PhotoImage(file="Icons/clearIcon.gif")
-		self.__equationIcon=tkinter.PhotoImage(file="Icons/equationIcon.gif")
+		self.__iconlist=[]
+		for i in os.listdir("Icons/"):
+			x=Image.open("Icons/"+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
+			img=Image.new("RGBA",(64,64),(0,0,0,0))
+			img.paste(x, mask=x)
+			img.filter(ImageFilter.SMOOTH_MORE)
+			img.filter(ImageFilter.SMOOTH_MORE)
+			self.__iconlist.append(img)
+		self.__clearIcon=ImageTk.PhotoImage(self.__iconlist[0])
+		self.__colourIcon=ImageTk.PhotoImage(self.__iconlist[1])
+		self.__equationIcon=ImageTk.PhotoImage(self.__iconlist[2])
+		self.__tableIcon=ImageTk.PhotoImage(self.__iconlist[3])
+		self.__manualIcon=ImageTk.PhotoImage(self.__iconlist[4])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
-		self.__colourButton = tkinter.Button(self.__root,image=self.__iconlist[1],width=64,height=64,command=self.colourButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
+		self.__colourButton = tkinter.Button(self.__root,image=self.__colourIcon,width=64,height=64,command=self.colourButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
 		self.__colourButton.grid(row=0,column=0, sticky="n",pady=0)
-		self.__regressionButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0,width=50,height=50, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__regressionButton.grid(row=1,column=0, sticky="n",pady=0)
-		self.__equationEntryButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=50,height=50, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__equationEntryButton.grid(row=2,column=0, sticky="n",pady=0)
-		self.__clearCanvasButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=50,height=50, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__clearCanvasButton.grid(row=3, sticky="n",pady=0)
-		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=50,height=50, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__manualButton.grid(row=499, sticky="s",pady=0)
+		self.__equationButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__equationButton.grid(row=1,column=0, sticky="n",pady=0)
+		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__manualButton.grid(row=124, sticky="s",pady=0)
+		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__dataButton.grid(row=2,column=0, sticky="n",pady=0)
+		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__clearButton.grid(row=3, sticky="n",pady=0)
+		
 	def colourButtonCallback(self): #a subroutine for changing the colour of the pen
 		#self.__colourinwindow=tkinter.Toplevel(self.__root)
 		#self.__colourinwindow.bind("<Return>",self.colour)
