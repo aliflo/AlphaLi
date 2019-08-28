@@ -206,6 +206,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		os.chdir("WIP Application/")
 		self.__iconlist=[]
 		for i in os.listdir("Icons/"):
+			print (i)
 			x=Image.open("Icons/"+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
 			img=Image.new("RGBA",(64,64),(0,0,0,0))
 			img.paste(x, mask=x)
@@ -213,14 +214,14 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			img.filter(ImageFilter.SMOOTH_MORE)
 			self.__iconlist.append(img)
 		self.__clearIcon=ImageTk.PhotoImage(self.__iconlist[0])
-		self.__colourIcon=ImageTk.PhotoImage(self.__iconlist[1])
+		self.__canvasIcon=ImageTk.PhotoImage(self.__iconlist[1])
 		self.__equationIcon=ImageTk.PhotoImage(self.__iconlist[2])
 		self.__tableIcon=ImageTk.PhotoImage(self.__iconlist[3])
 		self.__manualIcon=ImageTk.PhotoImage(self.__iconlist[4])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
-		self.__colourButton = tkinter.Button(self.__root,image=self.__colourIcon,width=64,height=64,command=self.colourButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
-		self.__colourButton.grid(row=0,column=0, sticky="n",pady=0)
+		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=64,height=64,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
+		self.__canvasButton.grid(row=0,column=0, sticky="n",pady=0)
 		self.__equationButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__equationButton.grid(row=1,column=0, sticky="n",pady=0)
 		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
@@ -230,7 +231,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
 		
-	def colourButtonCallback(self): #a subroutine for changing the colour of the pen
+	def canvasButtonCallback(self): #a subroutine for changing the colour of the pen
 		#self.__colourinwindow=tkinter.Toplevel(self.__root)
 		#self.__colourinwindow.bind("<Return>",self.colour)
 		#self.__colourinwindow.lift()
