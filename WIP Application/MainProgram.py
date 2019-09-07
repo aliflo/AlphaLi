@@ -215,6 +215,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			img.filter(ImageFilter.SMOOTH_MORE)
 			img.filter(ImageFilter.SMOOTH_MORE)
 			self.__iconlist.append(img)
+			
 		self.__clearIcon=ImageTk.PhotoImage(self.__iconlist[0])
 		self.__canvasIcon=ImageTk.PhotoImage(self.__iconlist[1])
 		self.__equationIcon=ImageTk.PhotoImage(self.__iconlist[2])
@@ -232,6 +233,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__dataButton.grid(row=2,column=0, sticky="n",pady=0)
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
+
+		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "mouse over clear")
 		
 	def canvasButtonCallback(self): #a subroutine for changing the colour of the pen
 		#self.__colourinwindow=tkinter.Toplevel(self.__root)
@@ -299,4 +302,34 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			x=250
 			y=self.__b*x+self.__c
 			self.__pen2.goto(x,y)
+
+
+
+class CreateToolTip(object):
+    '''
+    create a tooltip for a given widget
+    '''
+    def __init__(self, widget, text='widget info'):
+        self.widget = widget
+        self.text = text
+        self.widget.bind("<Enter>", self.enter)
+        self.widget.bind("<Leave>", self.close)
+    def enter(self, event=None):
+        x = y = 0
+        x, y, cx, cy = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 65
+        y += self.widget.winfo_rooty() + 50
+        # creates a toplevel window
+        self.tw = tkinter.Toplevel(self.widget)
+        # Leaves only the label and removes the app window
+        self.tw.wm_overrideredirect(True)
+        self.tw.wm_geometry("+%d+%d" % (x, y))
+        label = tkinter.Label(self.tw, text=self.text, justify='left',
+                       background='grey', relief='solid', borderwidth=0, fg="white",
+                       font=("helvetica", "10", "normal",))
+        label.pack(ipadx=1)
+    def close(self, event=None):
+        if self.tw:
+            self.tw.destroy()
+
 instance = Application(tkinter.Tk())
