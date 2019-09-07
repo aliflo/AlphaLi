@@ -234,7 +234,14 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
 
-		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "mouse over clear")
+		
+		#tooltip creation using CreateToolTip class as taken from daniweb
+		#see bibliography (vegaseat, 2015)
+		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "Clear Canvas")
+		self.__dataButtonTTP=CreateToolTip(self.__dataButton, "Data Analysis Menu")
+		self.__manualButtonTTP=CreateToolTip(self.__manualButton, "Program Manual")
+		self.__canvasButtonTTP=CreateToolTip(self.__canvasButton, "Canvas Manipulator")
+		self.__equationButtonTTP=CreateToolTip(self.__equationButton, "Equation Entry")
 		
 	def canvasButtonCallback(self): #a subroutine for changing the colour of the pen
 		#self.__colourinwindow=tkinter.Toplevel(self.__root)
@@ -305,7 +312,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 
 
 
-class CreateToolTip(object):
+class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
     create a tooltip for a given widget
     '''
