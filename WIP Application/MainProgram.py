@@ -187,6 +187,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.__itemNumConfirm.grid(column=2, row=1)
 		#self.__tableInput.bind("<Return>",self.itemNumConfirmCallback)
 		print ("table button pressed")
+		self.__pen2.goto(0,0)
+		self.__pen2.circle(50)
 	def userEnterValues(self):
 		#user enters equation here
 		#self.__equationWindow=tkinter.Toplevel()
@@ -199,6 +201,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.defineEquation(None))
 		#self.__equationEntered.grid(row=21,column=11)
 		print ("equation button pressed")
+		self.__canvas.scale("all",0,0,0.5,0.5)
 	def clearCanvas(self):
 		self.__pen2.clear()
 		self.__pen2.penup()
@@ -255,6 +258,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.colourinbutton=tkinter.Button(master=self.__colourinwindow, text="OK", command=lambda:self.colour(None)).grid(row=3) #Adds a confirm button for the colour input, which calls the colour subroutine
 		#if self.__colourin=="":
 		#	self.__colourin="black"
+		self.__canvas.scale("all",0,0,2,2)
 		print ("color pressed")
 	def colour(self,Event):
 		try:
