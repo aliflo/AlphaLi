@@ -43,6 +43,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__screen.hideturtle()#Hides the pen. It's at the centre of the screen right now
 		self.drawAxis()#code taken from the DrawsGraphs
 	def manual(self):
+		os.chdir(os.path.dirname(os.path.realpath(__file__)))
 		print ("manual pressed")
 		webbrowser.open("manual.html",new=2)
 		#self.__manualString="""Graphical representation and regression analysis program.\nManual\n\n1: Colour Changer\nThe icon with three colours in circles can be used to change the colour of the pen. Click it, and type in a colour. A list of valid colours names can be found by clicking the button at the bottom.\n\n2: Regression Analysis\nThis button will allow you to enter a set of values and have an approximate line of best fit drawn, using the least-squares regression method. Upon clicking the button, you will be prompted to enter how many values there are in your set of x/y co-ordinates. For example, if you have the set (1,1),(2,2),(3,3) then you must enter 3 here, because you have 3 sets of values. Then, press ENTER on your keyboard or click "OK" and enter the values in order in the table, as integer values. Decimals are not currently supported - as it is an approximation anyway, scale all your values up by the same factor, or round the values. When you have entered all the values, press OK or press ENTER again. The line should then be drawn. Currently, only linear graphs can be done accurately - polynomials will be undoubtedly innaccurate.\n\n3: Enter Equation\nThe third button, resembling a π symbol with a small plus, will allow you to enter a quadratic or linear equation and have it draw. Currently, only quadratics and linear equations are supported, and should be entered in the format "x^2+3x+5". The "a" value is taken to be 1 in this example, but can be entered as any value. An exampe of a linear would be "5x+5"\n\n4: Clear Canvas\nThe recycling bin button can be used to clear the canvas, and make it blank white again. Be careful not to click this one by accident!\n\n5: Information\nClicking this button will open the manual you are currently reading."""
@@ -207,7 +208,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		path2=path+"/Icons/"
 		self.__iconlist=[]
 		for i in os.listdir(path2):
-			print (i)
 			x=Image.open(path2+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
 			img=Image.new("RGBA",(64,64),(0,0,0,0))
 			img.paste(x, mask=x)
