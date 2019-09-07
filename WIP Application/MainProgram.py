@@ -207,7 +207,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		path=os.path.dirname(os.path.realpath(__file__))
 		path2=path+"/Icons/"
 		self.__iconlist=[]
-		for i in os.listdir(path2):
+		for i in sorted(os.listdir(path2)):
 			print (i)
 			x=Image.open(path2+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
 			img=Image.new("RGBA",(64,64),(0,0,0,0))
