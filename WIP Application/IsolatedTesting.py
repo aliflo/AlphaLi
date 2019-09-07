@@ -1,5 +1,9 @@
 import os
-print(os.path.dirname(os.path.realpath(__file__)))
+path=os.path.dirname(os.path.realpath(__file__))
+print(path)
+path2=path+"\Icons"
+print(os.listdir(path2))
+
 
 
 
