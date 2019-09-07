@@ -204,11 +204,11 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.goto(-1,0)
 	def buttons(self):
 		path=os.path.dirname(os.path.realpath(__file__))
-		path2=path+"\Icons"
+		path2=path+"/Icons/"
 		self.__iconlist=[]
 		for i in os.listdir(path2):
 			print (i)
-			x=Image.open("Icons/"+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
+			x=Image.open(path2+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
 			img=Image.new("RGBA",(64,64),(0,0,0,0))
 			img.paste(x, mask=x)
 			img.filter(ImageFilter.SMOOTH_MORE)
