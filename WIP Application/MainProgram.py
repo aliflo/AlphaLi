@@ -21,15 +21,14 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__root = master#redefines master as self.__root so it can be used in other methods of this class
 		self.__root.title("Graphing Program")
 		self.grid()#puts the window in a grid  
-		self.setupScreen()#runs the setupScreen method
-		self.buttons()
+		self.setupScreen(500,500,True)#runs the setupScreen method
 		self.__root.mainloop()
-	def setupScreen(self):
+	def setupScreen(self, w, h,init):
 		self.__coolblue="#46ACC2"
-		self.__canvas = tkinter.Canvas(master = self.__root, width = 500, height = 500)#creates a TKINTER canvas, not
+		self.__canvas = tkinter.Canvas(master = self.__root, height = h, width = w)#creates a TKINTER canvas, not
 		#a turtle one, with specifications 500*500. Possible TODO - make the screen size scale to the user's pc using winfo.getwidth?
-		self.__sideBarCanvas=tkinter.Canvas(master=self.__root,width=66,height=500,bg=self.__coolblue,highlightthickness=0)
-		self.__sideBarCanvas.grid(row=0,column=0,rowspan=500)
+		self.__sideBarCanvas=tkinter.Canvas(master=self.__root,width=63,height=h,bg=self.__coolblue,highlightthickness=0)
+		self.__sideBarCanvas.grid(row=0,column=0,rowspan=h)
 		self.__canvas.grid(column=1,row=0,columnspan=20,rowspan=125)#puts the canvas on the grid, in the window
 		self.__screen = turtle.RawTurtle(self.__canvas)#now creates a RawTurtle class instance, which makes a window
 		self.__pen2=turtle.RawTurtle(self.__canvas)
@@ -37,56 +36,36 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.__pen2.hideturtle()
 		self.__pen2.color("blue")
 		self.__pen2.shape("circle")
-		self.__pen2.turtlesize(stretch_wid=0.2,stretch_len=0.2) 
+		self.__pen2.turtlesize(stretch_wid=0.25,stretch_len=0.25) 
 		self.__pen2.goto(-1,0)
 		#a pen, but we can use it to draw the axes
+		self.buttons(h,w,init)
 		self.__screen.hideturtle()#Hides the pen. It's at the centre of the screen right now
-		self.drawAxis()#code taken from the DrawsGraphs
+		self.drawAxis(w,h)#code taken from the DrawsGraphs
 	def manual(self):
 		os.chdir(os.path.dirname(os.path.realpath(__file__)))
 		print ("manual pressed")
-		webbrowser.open("manual.html",new=2)
-		#self.__manualString="""Graphical representation and regression analysis program.\nManual\n\n1: Colour Changer\nThe icon with three colours in circles can be used to change the colour of the pen. Click it, and type in a colour. A list of valid colours names can be found by clicking the button at the bottom.\n\n2: Regression Analysis\nThis button will allow you to enter a set of values and have an approximate line of best fit drawn, using the least-squares regression method. Upon clicking the button, you will be prompted to enter how many values there are in your set of x/y co-ordinates. For example, if you have the set (1,1),(2,2),(3,3) then you must enter 3 here, because you have 3 sets of values. Then, press ENTER on your keyboard or click "OK" and enter the values in order in the table, as integer values. Decimals are not currently supported - as it is an approximation anyway, scale all your values up by the same factor, or round the values. When you have entered all the values, press OK or press ENTER again. The line should then be drawn. Currently, only linear graphs can be done accurately - polynomials will be undoubtedly innaccurate.\n\n3: Enter Equation\nThe third button, resembling a π symbol with a small plus, will allow you to enter a quadratic or linear equation and have it draw. Currently, only quadratics and linear equations are supported, and should be entered in the format "x^2+3x+5". The "a" value is taken to be 1 in this example, but can be entered as any value. An exampe of a linear would be "5x+5"\n\n4: Clear Canvas\nThe recycling bin button can be used to clear the canvas, and make it blank white again. Be careful not to click this one by accident!\n\n5: Information\nClicking this button will open the manual you are currently reading."""
-		#self.__manual=tkinter.Toplevel(self.__root)
-		#self.__manualText=tkinter.Label(self.__manual,text=self.__manualString,wraplength=750,justify="left",font=("Helvetica",12)).grid(row=0)
-		
-		#self.__manualColourListButton = tkinter.Button(self.__manual,text="Colour List",command=self.coloursList)
-		#self.__manualColourListButton.grid(row=1,column=0,sticky="W")
-		#self.__manualConfirm=tkinter.Button(self.__manual,text="Close",command=lambda:self.__manual.destroy())
-		#self.__manualConfirm.grid(row=1,column=0,sticky="E")	
-	def coloursList(self):#this subroutine will create a window that displays every "named" colour available for use in tkinter
-		colours = ['black', 'gray0', 'grey0', 'gray1', 'grey1', 'gray2', 'grey2', 'gray3', 'grey3', 'gray4', 'grey4', 'gray5', 'grey5', 'gray6', 'grey6', 'gray7', 'grey7', 'gray8', 'grey8', 'gray9', 'grey9', 'gray10', 'grey10', 'gray11', 'grey11', 'gray12', 'grey12', 'gray13', 'grey13', 'red4', 'dark red', 'DarkRed', 'gray14', 'grey14', 'gray15', 'grey15', 'gray16', 'grey16', 'gray17', 'grey17', 'gray18', 'grey18', 'gray19', 'grey19', 'red3', 'gray20', 'grey20', 'firebrick4', 'gray21', 'grey21', 'gray22', 'grey22', 'red2', 'gray23', 'grey23', 'OrangeRed4', 'brown4', 'gray24', 'grey24', 'red', 'red1', 'gray25', 'grey25', 'gray26', 'grey26', 'firebrick', 'gray27', 'grey27', 'gray28', 'grey28', 'brown', 'tomato4', 'gray29', 'grey29', 'gray30', 'grey30', 'IndianRed4', 'firebrick3', 'gray31', 'grey31', 'coral4', 'DarkOrange4', 'gray32', 'grey32', 'saddle brown', 'SaddleBrown', 'chocolate4', 'gray33', 'grey33', 'sienna4', 'gray34', 'grey34', 'OrangeRed3', 'brown3', 'gray35', 'grey35', 'salmon4', 'firebrick2', 'gray36', 'grey36', 'gray37', 'grey37', 'orange4', 'gray38', 'grey38', 'firebrick1', 'LightSalmon4', 'sienna', 'tan4', 'gray39', 'grey39', 'OrangeRed2', 'gray40', 'grey40', 'brown2', 'DarkGoldenrod4', 'dim gray', 'DimGray', 'dim grey', 'DimGrey', 'gray41', 'grey41', 'gray42', 'grey42', 'goldenrod4', 'tomato3', 'orange red', 'OrangeRed', 'OrangeRed1', 'gray43', 'grey43', 'brown1', 'gray44', 'grey44', 'RosyBrown4', 'IndianRed3', 'gray45', 'grey45', 'coral3', 'gray46', 'grey46', 'burlywood4', 'indian red', 'IndianRed', 'DarkOrange3', 'gray47', 'grey47', 'chocolate3', 'gray48', 'grey48', 'PeachPuff4', 'NavajoWhite4', 'gray49', 'grey49', 'sienna3', 'chocolate', 'tomato2', 'gray50', 'grey50', 'bisque4', 'wheat4', 'MistyRose4', 'gray51', 'grey51', 'AntiqueWhite4', 'IndianRed2', 'salmon3', 'gray52', 'grey52', 'tomato', 'tomato1', 'seashell4', 'gray53', 'grey53', 'coral2', 'snow4', 'dark goldenrod', 'DarkGoldenrod', 'gray54', 'grey54', 'DarkOrange2', 'gray55', 'grey55', 'chocolate2', 'orange3', 'IndianRed1', 'gray56', 'grey56', 'gray57', 'grey57', 'LightSalmon3', 'sienna2', 'peru', 'tan3', 'coral1', 'gray58', 'grey58', 'DarkOrange1', 'gray59', 'grey59', 'chocolate1', 'gray60', 'grey60', 'DarkGoldenrod3', 'rosy brown', 'RosyBrown', 'salmon2', 'coral', 'light coral', 'LightCoral', 'gray61', 'grey61', 'sienna1', 'salmon', 'gray62', 'grey62', 'dark orange', 'DarkOrange', 'goldenrod3', 'gray63', 'grey63', 'gray64', 'grey64', 'orange2', 'salmon1', 'gray65', 'grey65', 'RosyBrown3', 'gray66', 'grey66', 'LightSalmon2', 'dark salmon', 'DarkSalmon', 'goldenrod', 'tan2', 'dark grey', 'DarkGrey', 'dark gray', 'DarkGray', 'gray67', 'grey67', 'gray68', 'grey68', 'burlywood3', 'orange', 'orange1', 'gray69', 'grey69', 'DarkGoldenrod2', 'sandy brown', 'SandyBrown', 'gray70', 'grey70', 'light salmon', 'LightSalmon', 'LightSalmon1', 'PeachPuff3', 'tan1', 'gray71', 'grey71', 'NavajoWhite3', 'gray72', 'grey72', 'goldenrod2', 'tan', 'gray73', 'grey73', 'bisque3', 'wheat3', 'MistyRose3', 'gray74', 'grey74', 'burlywood', 'gray', 'grey', 'DarkGoldenrod1', 'gray75', 'grey75', 'RosyBrown2', 'gray76', 'grey76', 'AntiqueWhite3', 'gray77', 'grey77', 'goldenrod1', 'seashell3', 'gray78', 'grey78', 'gray79', 'grey79', 'snow3', 'burlywood2', 'gray80', 'grey80', 'gray81', 'grey81', 'RosyBrown1', 'gray82', 'grey82', 'PeachPuff2', 'light grey', 'LightGrey', 'light gray', 'LightGray', 'NavajoWhite2', 'gray83', 'grey83', 'gray84', 'grey84', 'bisque2', 'gray85', 'grey85', 'burlywood1', 'wheat2', 'MistyRose2', 'gray86', 'grey86', 'gainsboro', 'gray87', 'grey87', 'gray88', 'grey88', 'wheat', 'peach puff', 'PeachPuff', 'PeachPuff1', 'AntiqueWhite2', 'navajo white', 'NavajoWhite', 'NavajoWhite1', 'gray89', 'grey89', 'gray90', 'grey90', 'seashell2', 'moccasin', 'gray91', 'grey91', 'bisque', 'bisque1', 'wheat1', 'snow2', 'misty rose', 'MistyRose', 'MistyRose1', 'gray92', 'grey92', 'gray93', 'grey93', 'antique white', 'AntiqueWhite', 'blanched almond', 'BlanchedAlmond', 'gray94', 'grey94', 'papaya whip', 'PapayaWhip', 'AntiqueWhite1', 'linen', 'gray95', 'grey95', 'white smoke', 'WhiteSmoke', 'gray96', 'grey96', 'old lace', 'OldLace', 'seashell', 'seashell1', 'gray97', 'grey97', 'gray98', 'grey98', 'floral white', 'FloralWhite', 'snow', 'snow1', 'gray99', 'grey99', 'white', 'gray100', 'grey100', 'dark olive green', 'DarkOliveGreen', 'gold4', 'OliveDrab4', 'olive drab', 'OliveDrab', 'DarkOliveGreen4', 'LightGoldenrod4', 'yellow4', 'khaki4', 'cornsilk4', 'LemonChiffon4', 'LightYellow4', 'ivory4', 'gold3', 'dark khaki', 'DarkKhaki', 'yellow green', 'YellowGreen', 'OliveDrab3', 'DarkOliveGreen3', 'LightGoldenrod3', 'yellow3', 'khaki3', 'gold2', 'LemonChiffon3', 'cornsilk3', 'LightYellow3', 'ivory3', 'gold', 'gold1', 'OliveDrab2', 'DarkOliveGreen2', 'LightGoldenrod2', 'light goldenrod', 'LightGoldenrod', 'green yellow', 'GreenYellow', 'yellow2', 'khaki2', 'khaki', 'OliveDrab1', 'pale goldenrod', 'PaleGoldenrod', 'LemonChiffon2', 'cornsilk2', 'DarkOliveGreen1', 'LightGoldenrod1', 'LightYellow2', 'ivory2', 'yellow', 'yellow1', 'khaki1', 'beige', 'light goldenrod yellow', 'LightGoldenrodYellow', 'cornsilk', 'cornsilk1', 'lemon chiffon', 'LemonChiffon', 'LemonChiffon1', 'light yellow', 'LightYellow', 'LightYellow1', 'ivory', 'ivory1', 'dark green', 'DarkGreen', 'green4', 'forest green', 'ForestGreen', 'chartreuse4', 'PaleGreen4', 'DarkSeaGreen4', 'honeydew4', 'green3', 'lime green', 'LimeGreen', 'green2', 'chartreuse3', 'dark sea green', 'DarkSeaGreen', 'green', 'green1', 'PaleGreen3', 'DarkSeaGreen3', 'chartreuse2', 'honeydew3', 'lawn green', 'LawnGreen', 'chartreuse', 'chartreuse1', 'PaleGreen2', 'light green', 'LightGreen', 'DarkSeaGreen2', 'pale green', 'PaleGreen', 'PaleGreen1', 'honeydew2', 'DarkSeaGreen1', 'honeydew', 'honeydew1', 'SpringGreen4', 'sea green', 'SeaGreen', 'SeaGreen4', 'aquamarine4', 'light sea green', 'LightSeaGreen', 'medium sea green', 'MediumSeaGreen', 'SpringGreen3', 'SeaGreen3', 'SpringGreen2', 'medium turquoise', 'MediumTurquoise', 'medium aquamarine', 'MediumAquamarine', 'aquamarine3', 'medium spring green', 'MediumSpringGreen', 'turquoise', 'spring green', 'SpringGreen', 'SpringGreen1', 'SeaGreen2', 'aquamarine2', 'SeaGreen1', 'aquamarine', 'aquamarine1', 'mint cream', 'MintCream', 'DodgerBlue4', 'dark slate gray', 'DarkSlateGray', 'dark slate grey', 'DarkSlateGrey', 'DeepSkyBlue4', 'SteelBlue4', 'RoyalBlue3', 'DodgerBlue3', 'turquoise4', 'SkyBlue4', 'cyan4', 'dark cyan', 'DarkCyan', 'RoyalBlue2', 'DodgerBlue2', 'RoyalBlue1', 'LightSkyBlue4', 'steel blue', 'SteelBlue', 'DeepSkyBlue3', 'SlateGray4', 'LightSteelBlue4', 'CadetBlue4', 'dodger blue', 'DodgerBlue', 'DodgerBlue1', 'LightBlue4', 'slate gray', 'SlateGray', 'slate grey', 'SlateGrey', 'DarkSlateGray4', 'PaleTurquoise4', 'light slate gray', 'LightSlateGray', 'light slate grey', 'LightSlateGrey', 'LightCyan4', 'SteelBlue3', 'azure4', 'DeepSkyBlue2', 'cadet blue', 'CadetBlue', 'cornflower blue', 'CornflowerBlue', 'deep sky blue', 'DeepSkyBlue', 'DeepSkyBlue1', 'turquoise3', 'SkyBlue3', 'cyan3', 'dark turquoise', 'DarkTurquoise', 'SteelBlue2', 'SteelBlue1', 'LightSkyBlue3', 'turquoise2', 'SlateGray3', 'LightSteelBlue3', 'SkyBlue2', 'CadetBlue3', 'cyan2', 'LightBlue3', 'DarkSlateGray3', 'turquoise1', 'sky blue', 'SkyBlue', 'PaleTurquoise3', 'light sky blue', 'LightSkyBlue', 'SkyBlue1', 'light steel blue', 'LightSteelBlue', 'cyan', 'cyan1', 'LightCyan3', 'LightSkyBlue2', 'azure3', 'SlateGray2', 'light blue', 'LightBlue', 'LightSteelBlue2', 'CadetBlue2', 'powder blue', 'PowderBlue', 'LightBlue2', 'DarkSlateGray2', 'LightSkyBlue1', 'SlateGray1', 'LightSteelBlue1', 'PaleTurquoise2', 'pale turquoise', 'PaleTurquoise', 'CadetBlue1', 'LightBlue1', 'DarkSlateGray1', 'LightCyan2', 'azure2', 'PaleTurquoise1', 'alice blue', 'AliceBlue', 'light cyan', 'LightCyan', 'LightCyan1', 'azure', 'azure1', 'navy', 'navy blue', 'NavyBlue', 'blue4', 'dark blue', 'DarkBlue', 'medium blue', 'MediumBlue', 'blue3', 'blue2', 'blue', 'blue1', 'midnight blue', 'MidnightBlue', 'RoyalBlue4', 'SlateBlue4', 'dark slate blue', 'DarkSlateBlue', 'MediumPurple4', 'SlateBlue3', 'slate blue', 'SlateBlue', 'royal blue', 'RoyalBlue', 'SlateBlue2', 'medium slate blue', 'MediumSlateBlue', 'MediumPurple3', 'SlateBlue1', 'light slate blue', 'LightSlateBlue', 'medium purple', 'MediumPurple', 'MediumPurple2', 'MediumPurple1', 'lavender', 'ghost white', 'GhostWhite', 'magenta4', 'dark magenta', 'DarkMagenta', 'purple4', 'dark violet', 'DarkViolet', 'DarkOrchid4', 'magenta3', 'purple3', 'magenta2', 'MediumOrchid4', 'purple', 'blue violet', 'BlueViolet', 'magenta', 'magenta1', 'purple2', 'dark orchid', 'DarkOrchid', 'DarkOrchid3', 'purple1', 'orchid4', 'DarkOrchid2', 'DarkOrchid1', 'plum4', 'MediumOrchid3', 'medium orchid', 'MediumOrchid', 'thistle4', 'MediumOrchid2', 'orchid3', 'MediumOrchid1', 'orchid', 'orchid2', 'violet', 'plum3', 'orchid1', 'plum', 'thistle3', 'plum2', 'thistle', 'plum1', 'thistle2', 'thistle1', 'DeepPink4', 'maroon4', 'DebianRed', 'VioletRed4', 'DeepPink3', 'medium violet red', 'MediumVioletRed', 'DeepPink2', 'HotPink4', 'violet red', 'VioletRed', 'maroon', 'deep pink', 'DeepPink', 'DeepPink1', 'maroon3', 'PaleVioletRed4', 'VioletRed3', 'maroon2', 'LightPink4', 'VioletRed2', 'pink4', 'maroon1', 'VioletRed1', 'HotPink3', 'PaleVioletRed3', 'LavenderBlush4', 'pale violet red', 'PaleVioletRed', 'HotPink2', 'hot pink', 'HotPink', 'HotPink1', 'PaleVioletRed2', 'LightPink3', 'pink3', 'PaleVioletRed1', 'LightPink2', 'pink2', 'LightPink1', 'LavenderBlush3', 'pink1', 'light pink', 'LightPink', 'pink', 'LavenderBlush2', 'lavender blush', 'LavenderBlush', 'LavenderBlush1']#this list was taken from http://www.science.smith.edu/dftwiki/index.php/Color_Charts_for_TKinter , creative commons license applies
-		row = 0#not bothering with private variables as none of this is used anywhere else in the program so it can all be "deleted" outside this subroutine
-		column = 0 #the list of colours is a long list of string colour names, row and column are used for positional gridding and start as 0
-		self.__colourToplevel = tkinter.Toplevel(self.__root)#a toplevel window is created
-		for colour in colours:#iterate through the for loop, taking each string
-			temp = tkinter.Label(self.__colourToplevel,text=colour,background=colour)#a temp label where the text and colour are the colours from the list above current being iterated on
-			temp.grid(row=row,column=column,sticky="ew")#grid that, with the row and column as its row and column, and sticky east-west to make it fill the "boxes" that it occupies when gridded.
-			row = row+1#adds 1 to row, so the next item is gridded on the next row
-			if row>30:#if the row is over 30, then it's time to start a new column
-				row=0#row is set to 0 again
-				column=column+1#column is increased
-
-	def drawAxis(self):
+		webbrowser.open("manual.html",new=2)	
+	def drawAxis(self,x,y):
 		self.__screen.speed(0)#speed is instant
 		self.__screen.penup()
-		self.__screen.goto(-250,0) #The graphs axes are drawn with a 500x500 resolution
+		self.__screen.goto(-x,0) #The graphs axes are drawn with a 500x500 resolution
 		self.__screen.pendown()
-		self.__screen.goto(250,0)
+		self.__screen.goto(x,0)
 		self.__screen.penup()
-		self.__screen.goto(-1,-250)
+		self.__screen.goto(-1,-y)
 		self.__screen.pendown()
-		self.__screen.goto(-1,250)
+		self.__screen.goto(-1,y)
 		self.__screen.penup()
 		self.__screen.goto(3,1);self.__screen.write("(0,0)")#writes lil numbers on the axes to let 	
-		self.__screen.goto(3,238);self.__screen.write("(0,250)")#the user know what's poppin	
-		self.__screen.goto(-248,0);self.__screen.write("(250,0)")
-		self.__screen.goto(3,-248);self.__screen.write("(0,-250)")
-		self.__screen.goto(215,0);self.__screen.write("(250,0)")
-		self.__screen.goto(90,-250);self.__screen.write("Created by Tom Birkbeck and Callum Cafferty",font=("Helvetica",6))
+		self.__screen.goto(3,(y//2)-12);self.__screen.write("(0,"+str(y//2)+")")#the user know what's poppin	
+		self.__screen.goto(-((x//2)-12),0);self.__screen.write("(-"+str(x//2)+",0)")
+		self.__screen.goto(3,-((y//2)-12));self.__screen.write("(0-,"+str(y//2)+")")
+		self.__screen.goto(((x//2)-48),0);self.__screen.write("("+str(x//2)+",0)")
+		self.__screen.goto(90,-(y//2));self.__screen.write("Created by Tom Birkbeck and Callum Cafferty",font=("Helvetica",6))
 	def right(self,event):
 		if not event.widget in self.__tableCellsListYvalues:
-			self.__tableCellsListYvalues[self.__tableCellsListXvalues.index(event.widget)].focus_set()
+			self.__tableCellsListYvalues[self.__tableCellsListXvalues.index(event.widget)].focus_set()			
 	def left(self,event):
 		if not event.widget in self.__tableCellsListXvalues:
 			self.__tableCellsListXvalues[self.__tableCellsListYvalues.index(event.widget)].focus_set()
@@ -206,18 +185,23 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.clear()
 		self.__pen2.penup()
 		self.__pen2.goto(-1,0)
-	def buttons(self):
+	def buttons(self,h,w,init):
+		if init==False:
+			self.__canvasButton.grid_forget()
+			self.__equationButton.grid_forget()
+			self.__manualButton.grid_forget()
+			self.__dataButton.grid_forget()
+			self.__clearButton.grid_forget()
 		path=os.path.dirname(os.path.realpath(__file__))
 		path2=path+"/Icons/"
 		self.__iconlist=[]
 		for i in sorted(os.listdir(path2)):
-			x=Image.open(path2+str(i)).resize((64,64),Image.ANTIALIAS).convert("RGBA")
-			img=Image.new("RGBA",(64,64),(0,0,0,0))
+			x=Image.open(path2+str(i)).resize((62,62),Image.ANTIALIAS).convert("RGBA")
+			img=Image.new("RGBA",(62,62),(0,0,0,0))
 			img.paste(x, mask=x)
 			img.filter(ImageFilter.SMOOTH_MORE)
 			img.filter(ImageFilter.SMOOTH_MORE)
 			self.__iconlist.append(img)
-			
 		self.__clearIcon=ImageTk.PhotoImage(self.__iconlist[0])
 		self.__canvasIcon=ImageTk.PhotoImage(self.__iconlist[1])
 		self.__equationIcon=ImageTk.PhotoImage(self.__iconlist[2])
@@ -225,18 +209,16 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__manualIcon=ImageTk.PhotoImage(self.__iconlist[4])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
-		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=64,height=64,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
+		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=62,height=62,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
 		self.__canvasButton.grid(row=0,column=0, sticky="n",pady=0)
-		self.__equationButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__equationButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__equationButton.grid(row=1,column=0, sticky="n",pady=0)
-		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__manualButton.grid(row=124, sticky="s",pady=0)
-		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__dataButton.grid(row=2,column=0, sticky="n",pady=0)
-		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
-
-		
 		#tooltip creation using CreateToolTip class as taken from daniweb
 		#see bibliography (vegaseat, 2015)
 		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "Clear Canvas")
@@ -256,16 +238,28 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			if row>15:#if the row is over 30, then it's time to start a new column
 				row=0#row is set to 0 again
 				column=column+1#column is increased
-	def resizeWindow(self):
-		print ("ye")
+	def resizeCallback(self):
+		self.__canvas.grid_forget()
+		self.__sideBarCanvas.grid_forget()
+		self.setupScreen(int(self.__resizeXEntry.get()),int(self.__resizeYEntry.get()),False)
 	def canvasButtonCallback(self): #a subroutine for changing the colour of the pen
 		self.__canvasWindow=tkinter.Toplevel(self.__root)
-		self.__colorLabel=tkinter.Label(self.__canvasWindow, text="Colour: ").grid(row=0, column=0, padx=2, pady=2)
+		self.__canvasWindow.title("Canvas")
+		self.__colorLabel=tkinter.Label(self.__canvasWindow, text="Colour:").grid(row=0, column=0, padx=5, pady=10,sticky="w")
 		self.__colorButton=tkinter.Button(self.__canvasWindow,highlightthickness=0,background=self.__pen2.color()[0], activebackground=self.__pen2.color()[0], command=self.colourWindow)
-		self.__colorButton.grid(row=0, column=1, padx=2, pady=2)
-		self.__resizeButton=tkinter.Button(self.__canvasWindow, text="Resize Canvas",command=self.resizeWindow)
-		self.__resizeButton.grid(row=1,column=1,padx=2, pady=2)
-		self.__canvas.scale("all",0,0,2,2)
+		self.__colorButton.grid(row=0, column=1, padx=2, pady=(0,5),sticky="w")
+		self.__resizeButton=tkinter.Button(self.__canvasWindow, text="Resize",command=self.resizeCallback)
+		self.__resizeButton.grid(row=3,column=1,padx=2, pady=(5,0))
+		self.__resizeXlabel=tkinter.Label(self.__canvasWindow,text="Width:").grid(row=1,column=0,padx=2,pady=2, sticky="w")
+		self.__resizeYlabel=tkinter.Label(self.__canvasWindow,text="Height:").grid(row=2,column=0,padx=2,pady=2, sticky="w")
+		self.__resizeXEntry=tkinter.Entry(self.__canvasWindow, width=4)
+		self.__resizeXEntry.insert(0,str(self.__canvas.winfo_width()-2))
+		self.__resizeXEntry.grid(row=1,column=1,padx=2,pady=2,sticky="w")
+		self.__resizeYEntry=tkinter.Entry(self.__canvasWindow,width=4)
+		self.__resizeYEntry.insert(0,str(self.__canvas.winfo_height()-2))
+		self.__resizeYEntry.grid(row=2,column=1,padx=2,pady=2,sticky="w")
+		self.__cancelButton=tkinter.Button(self.__canvasWindow, text="Cancel", command=lambda: self.__canvasWindow.destroy())
+		self.__cancelButton.grid(row=3, column=0, padx=2, pady=(5,0))
 		self.__canvasWindow.grid()
 	def colour(self,colour):
 		self.__pen2.pencolor(colour)
