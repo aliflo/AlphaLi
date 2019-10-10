@@ -164,20 +164,15 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__itemNumLabel.grid_forget()
 		self.__itemNumConfirm.grid_forget()
 		self.tableCreate()
-	def tableInsert(self):
-		#self.__tableInput=tkinter.Toplevel()
-		#self.__tableEntries={}
-		#self.__itemNumEntry=tkinter.Entry(self.__tableInput)
-		#self.__itemNumEntry.focus_set()
-		#self.__itemNumEntry.grid(column=1, row=1)
-		#self.__itemNumLabel=tkinter.Label(self.__tableInput,text="Please enter the number of items you wish to enter")
-		#self.__itemNumLabel.grid(column=1, row=0)
-		#self.__itemNumConfirm=tkinter.Button(self.__tableInput,text="Confirm",command=lambda:self.itemNumConfirmCallback(None))
-		#self.__itemNumConfirm.grid(column=2, row=1)
-		#self.__tableInput.bind("<Return>",self.itemNumConfirmCallback)
-		print ("table button pressed")
-		self.__pen2.goto(0,0)
-		self.__pen2.circle(50)
+	def dataMenu(self):
+		self.__dataMenu=tkinter.Toplevel(self.__root,bg=self.__coolbluedark,height=1000,width=1000)
+		self.__dataMenu.title("Data Menu")
+		self.__dataMenu.grid()
+		#self.__dataMenu["bg"]=self.__coolblue
+		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon)
+		#self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__WHOButton.grid()
+
 	def userEnterValues(self):
 		#user enters equation here
 		#self.__equationWindow=tkinter.Toplevel()
@@ -213,6 +208,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equationIcon=ImageTk.PhotoImage(self.__iconlist[2])
 		self.__tableIcon=ImageTk.PhotoImage(self.__iconlist[3])
 		self.__manualIcon=ImageTk.PhotoImage(self.__iconlist[4])
+		self.__mosquitoIcon=ImageTk.PhotoImage(self.__iconlist[5])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
 		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=64,height=64,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
@@ -221,7 +217,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equationButton.grid(row=1,column=0, sticky="n",pady=0)
 		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__manualButton.grid(row=124, sticky="s",pady=0)
-		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.tableInsert, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.dataMenu, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__dataButton.grid(row=2,column=0, sticky="n",pady=0)
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
