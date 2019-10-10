@@ -1,14 +1,3 @@
-#main program to "concatenate" all our code into, and slap a nice UI over the top
-
-#TODO
-#make it so when you open a window (e.g. a enter equation window) by clicking a button, if you clickt the button again it deosn't open another window but just brings the other window to the front
-#move the menu icons off the actual canvas and give them a bar on the left
-#change error handling for reading the table so if all values are error it just says all are wrong (rather than a huge list of error messages)
-#TODO LONG TERM
-#R class that does polynomial regression
-#add support for linear and higher degree polynomial entry into the box
-#scrolling/zooming in the canvas
-
 import numpy as np
 import turtle,tkinter,math,os,webbrowser
 from PIL import Image, ImageTk, ImageFilter
