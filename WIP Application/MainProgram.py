@@ -237,18 +237,31 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			row = row+1#adds 1 to row, so the next item is gridded on the next row
 			if row>15:#if the row is over 30, then it's time to start a new column
 				row=0#row is set to 0 again
-				column=column+1#column is increased
-	def resizeCallback(self):
+				column=column+1#column is increase
+	def doResize(self):
+		self.__resizeConfirm.destroy()
 		self.__canvas.grid_forget()
 		self.__sideBarCanvas.grid_forget()
 		self.setupScreen(int(self.__resizeXEntry.get()),int(self.__resizeYEntry.get()),False)
+	def resizeWarning(self):
+		x=Image.open(os.path.dirname(os.path.realpath(__file__))+"/Icons/warning.png")
+		self.__warningIcon=ImageTk.PhotoImage(x)
+		self.__resizeConfirm=tkinter.Toplevel(self.__root)
+		self.__resizeConfirm.title("Warning")
+		self.__warning=tkinter.Label(self.__resizeConfirm, image=self.__warningIcon).grid(row=0,column=0, padx=3, pady=3)
+		self.__cropButton=tkinter.Button(self.__resizeConfirm,text="Confirm",command=self.doResize)
+		self.__cancelButton=tkinter.Button(self.__resizeConfirm,text="Cancel",command=lambda: self.__resizeConfirm.destroy())
+		self.__cropLabel=tkinter.Label(self.__resizeConfirm, text="Warning! Resizing will clear your canvas. Continue?").grid(row=0, column=1, columnspan=2, padx=3, pady=3)
+		self.__cropButton.grid(row=1, column=2, padx=3, pady=3)
+		self.__cancelButton.grid(row=1, column=1, padx=3, pady=3)
+		self.__resizeConfirm.grid()
 	def canvasButtonCallback(self): #a subroutine for changing the colour of the pen
 		self.__canvasWindow=tkinter.Toplevel(self.__root)
 		self.__canvasWindow.title("Canvas")
 		self.__colorLabel=tkinter.Label(self.__canvasWindow, text="Colour:").grid(row=0, column=0, padx=5, pady=10,sticky="w")
 		self.__colorButton=tkinter.Button(self.__canvasWindow,highlightthickness=0,background=self.__pen2.color()[0], activebackground=self.__pen2.color()[0], command=self.colourWindow)
 		self.__colorButton.grid(row=0, column=1, padx=2, pady=(0,5),sticky="w")
-		self.__resizeButton=tkinter.Button(self.__canvasWindow, text="Resize",command=self.resizeCallback)
+		self.__resizeButton=tkinter.Button(self.__canvasWindow, text="Resize",command=self.resizeWarning)
 		self.__resizeButton.grid(row=3,column=1,padx=2, pady=(5,0))
 		self.__resizeXlabel=tkinter.Label(self.__canvasWindow,text="Width:").grid(row=1,column=0,padx=2,pady=2, sticky="w")
 		self.__resizeYlabel=tkinter.Label(self.__canvasWindow,text="Height:").grid(row=2,column=0,padx=2,pady=2, sticky="w")
