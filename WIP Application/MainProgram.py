@@ -10,7 +10,7 @@
 #scrolling/zooming in the canvas
 
 import numpy as np
-import turtle,tkinter,math,os,webbrowser
+import turtle,tkinter,math,os,webbrowser,tkinter.font
 from PIL import Image, ImageTk, ImageFilter
 
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
@@ -42,6 +42,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.buttons(h,w,init)
 		self.__screen.hideturtle()#Hides the pen. It's at the centre of the screen right now
 		self.drawAxis(w,h)#code taken from the DrawsGraphs
+		self.addLabels(w,h,w,h)
 	def manual(self):
 		os.chdir(os.path.dirname(os.path.realpath(__file__)))
 		print ("manual pressed")
@@ -57,12 +58,13 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__screen.pendown()
 		self.__screen.goto(-1,y)
 		self.__screen.penup()
-		self.__screen.goto(3,1);self.__screen.write("(0,0)")#writes lil numbers on the axes to let 	
-		self.__screen.goto(3,(y//2)-12);self.__screen.write("(0,"+str(y//2)+")")#the user know what's poppin	
-		self.__screen.goto(-((x//2)-12),0);self.__screen.write("(-"+str(x//2)+",0)")
-		self.__screen.goto(3,-((y//2)-12));self.__screen.write("(0-,"+str(y//2)+")")
-		self.__screen.goto(((x//2)-48),0);self.__screen.write("("+str(x//2)+",0)")
 		self.__screen.goto(90,-(y//2));self.__screen.write("Created by Tom Birkbeck and Callum Cafferty",font=("Helvetica",6))
+	def addLabels(self,x,y,ax,ay):
+		self.__screen.goto(3,1);self.__screen.write("(0,0)")#writes lil numbers on the axes to let 	
+		self.__screen.goto(3,(ay//2)-12);self.__screen.write("(0,"+str(y//2)+")")#the user know what's poppin	
+		self.__screen.goto(-((ax//2)-12),0);self.__screen.write("(-"+str(x//2)+",0)")
+		self.__screen.goto(3,-((ay//2)-12));self.__screen.write("(0-,"+str(y//2)+")")
+		self.__screen.goto(((ax//2)-48),0);self.__screen.write("("+str(x//2)+",0)")
 	def right(self,event):
 		if not event.widget in self.__tableCellsListYvalues:
 			self.__tableCellsListYvalues[self.__tableCellsListXvalues.index(event.widget)].focus_set()			
@@ -165,9 +167,11 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.__itemNumConfirm=tkinter.Button(self.__tableInput,text="Confirm",command=lambda:self.itemNumConfirmCallback(None))
 		#self.__itemNumConfirm.grid(column=2, row=1)
 		#self.__tableInput.bind("<Return>",self.itemNumConfirmCallback)
-		print ("table button pressed")
+		self.__pen2.penup()
 		self.__pen2.goto(0,0)
-		self.__pen2.circle(50)
+		self.__pen2.pendown()
+		print (self.__zfactor)
+		self.__pen2.circle(50*self.__zfactor)
 	def userEnterValues(self):
 		#user enters equation here
 		#self.__equationWindow=tkinter.Toplevel()
@@ -181,11 +185,25 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.__equationEntered.grid(row=21,column=11)
 		print ("equation button pressed")
 		self.__canvas.scale("all",0,0,0.5,0.5)
+	def zoom(self,h,w,zin):
+		self.__screen.clear()
+		if zin==True:
+			self.__zfactor=self.__zfactor*3/2
+			self.__canvas.scale("all",0,0,3/2,3/2)
+		else:
+			self.__zfactor=self.__zfactor*2/3
+			self.__canvas.scale("all",0,0,2/3,2/3)
+		self.drawAxis(w,h)
+		self.addLabels((w*self.__zfactor),(h*self.__zfactor),w,h)
+		self.__canvas.delete(self.__zoomoutwindow,self.__zoominwindow)
+		self.__zoomoutwindow=self.__canvas.create_window(w-290,h-260,anchor="sw", window=self.__zoomoutButton)
+		self.__zoominwindow=self.__canvas.create_window(w-350,h-260,anchor="sw", window=self.__zoominButton)
 	def clearCanvas(self):
 		self.__pen2.clear()
 		self.__pen2.penup()
-		self.__pen2.goto(-1,0)
+		self.__pen2.goto(0,0)
 	def buttons(self,h,w,init):
+		self.__zfactor=1
 		if init==False:
 			self.__canvasButton.grid_forget()
 			self.__equationButton.grid_forget()
@@ -219,6 +237,12 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__dataButton.grid(row=2,column=0, sticky="n",pady=0)
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
+		zoomfont = tkinter.font.Font(family='Helvetica', size=26, weight="bold")
+		self.__zoominButton=tkinter.Button(self.__root, text="+", command=lambda: self.zoom(h,w,True),highlightthickness=0, bd=0,font=zoomfont, anchor="sw", width=1)
+		self.__zoominwindow=self.__canvas.create_window(w-350,h-260,anchor="sw", window=self.__zoominButton)
+		
+		self.__zoomoutButton=tkinter.Button(self.__root, text="-", command=lambda: self.zoom(h,w,False),highlightthickness=0, bd=0,font=zoomfont, width=1, anchor="sw")
+		self.__zoomoutwindow=self.__canvas.create_window(w-290,h-260,anchor="sw", window=self.__zoomoutButton)
 		#tooltip creation using CreateToolTip class as taken from daniweb
 		#see bibliography (vegaseat, 2015)
 		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "Clear Canvas")
@@ -322,8 +346,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			x=250
 			y=self.__b*x+self.__c
 			self.__pen2.goto(x,y)
-
-
 
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
