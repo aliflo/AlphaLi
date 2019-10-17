@@ -168,11 +168,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__dataMenu=tkinter.Toplevel(self.__root,bg=self.__coolbluedark,height=1000,width=1000)
 		self.__dataMenu.title("Data Menu")
 		self.__dataMenu.grid()
-		#self.__dataMenu["bg"]=self.__coolblue
-		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon)
+		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		#self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__WHOButton.grid()
-
+		self.__WHOButton.grid(row=0,column=0,pady=0,sticky="n")
 	def userEnterValues(self):
 		#user enters equation here
 		#self.__equationWindow=tkinter.Toplevel()
