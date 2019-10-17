@@ -239,10 +239,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
 		zoomfont = tkinter.font.Font(family='Helvetica', size=26, weight="bold")
 		self.__zoominButton=tkinter.Button(self.__root, text="+", command=lambda: self.zoom(h,w,True),highlightthickness=0, bd=0,font=zoomfont, anchor="sw", width=1)
-		self.__zoominwindow=self.__canvas.create_window(w-350,h-260,anchor="sw", window=self.__zoominButton)
-		
+		self.__zoominwindow=self.__canvas.create_window(w-350*(w/500),h-260*(h/500),anchor="sw", window=self.__zoominButton)
 		self.__zoomoutButton=tkinter.Button(self.__root, text="-", command=lambda: self.zoom(h,w,False),highlightthickness=0, bd=0,font=zoomfont, width=1, anchor="sw")
-		self.__zoomoutwindow=self.__canvas.create_window(w-290,h-260,anchor="sw", window=self.__zoomoutButton)
+		self.__zoomoutwindow=self.__canvas.create_window(w-300*(w/500),h-260*(h/500),anchor="sw", window=self.__zoomoutButton)
 		#tooltip creation using CreateToolTip class as taken from daniweb
 		#see bibliography (vegaseat, 2015)
 		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "Clear Canvas")
@@ -267,6 +266,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__canvas.grid_forget()
 		self.__sideBarCanvas.grid_forget()
 		self.setupScreen(int(self.__resizeXEntry.get()),int(self.__resizeYEntry.get()),False)
+		self.__canvasWindow.destroy()
 	def resizeWarning(self):
 		x=Image.open(os.path.dirname(os.path.realpath(__file__))+"/Icons/warning.png")
 		self.__warningIcon=ImageTk.PhotoImage(x)
@@ -274,10 +274,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__resizeConfirm.title("Warning")
 		self.__warning=tkinter.Label(self.__resizeConfirm, image=self.__warningIcon).grid(row=0,column=0, padx=3, pady=3)
 		self.__cropButton=tkinter.Button(self.__resizeConfirm,text="Confirm",command=self.doResize)
-		self.__cancelButton=tkinter.Button(self.__resizeConfirm,text="Cancel",command=lambda: self.__resizeConfirm.destroy())
+		self.__cancelButton2=tkinter.Button(self.__resizeConfirm,text="Cancel",command=lambda: self.__resizeConfirm.destroy())
 		self.__cropLabel=tkinter.Label(self.__resizeConfirm, text="Warning! Resizing will clear your canvas. Continue?").grid(row=0, column=1, columnspan=2, padx=3, pady=3)
 		self.__cropButton.grid(row=1, column=2, padx=3, pady=3)
-		self.__cancelButton.grid(row=1, column=1, padx=3, pady=3)
+		self.__cancelButton2.grid(row=1, column=1, padx=3, pady=3)
 		self.__resizeConfirm.grid()
 	def canvasButtonCallback(self): #a subroutine for changing the colour of the pen
 		self.__canvasWindow=tkinter.Toplevel(self.__root)
@@ -295,7 +295,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__resizeYEntry=tkinter.Entry(self.__canvasWindow,width=4)
 		self.__resizeYEntry.insert(0,str(self.__canvas.winfo_height()-2))
 		self.__resizeYEntry.grid(row=2,column=1,padx=2,pady=2,sticky="w")
-		self.__cancelButton=tkinter.Button(self.__canvasWindow, text="Cancel", command=lambda: self.__canvasWindow.destroy())
+		self.__cancelButton=tkinter.Button(self.__canvasWindow, text="Close", command=lambda: self.__canvasWindow.destroy())
 		self.__cancelButton.grid(row=3, column=0, padx=2, pady=(5,0))
 		self.__canvasWindow.grid()
 	def colour(self,colour):
