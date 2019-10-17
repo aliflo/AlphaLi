@@ -176,6 +176,29 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__AIButton.grid()
 	def WHOdata(self):
 		print("buton pressed to activate callback for the mosquito data")
+		filepath=os.path.dirname(os.path.realpath(__file__))
+		malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\malaria_data_cleaned.csv")
+		print(malariapath)
+		with open(malariapath) as csvdata:
+			listOfCountries = []
+			for j in csvdata:
+				listOfCountries.append((j.split(",")[0]))
+		self.__WHOButton.destroy()
+		self.__AIButton.destroy()
+		buttons=[]
+		for i in listOfCountries:
+			tempButton = tkinter.Button(self.__dataMenu,text=i,width=15)
+			buttons.append(tempButton)
+		column=0
+		row=0
+		for k in buttons:
+			k.grid(column=column,row=row)
+			row+=1
+			if row%25==0:
+				column+=1
+				row=0
+
+
 	def AIdata(self):
 		print("button pressed to activate callback for AI data")
 
@@ -198,6 +221,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.goto(-1,0)
 	def buttons(self):
 		path=os.path.dirname(os.path.realpath(__file__))
+		print(path)
 		path2=path+"/Icons/"
 		self.__iconlist=[]
 		for i in sorted(os.listdir(path2)):
