@@ -165,12 +165,20 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__itemNumConfirm.grid_forget()
 		self.tableCreate()
 	def dataMenu(self):
-		self.__dataMenu=tkinter.Toplevel(self.__root,bg=self.__coolbluedark,height=1000,width=1000)
+		self.__dataMenu=tkinter.Toplevel(self.__root,bg=self.__coolbluedark,height=300,width=300)
 		self.__dataMenu.title("Data Menu")
 		self.__dataMenu.grid()
-		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		#self.__dataMenu["bg"]=self.__coolblue
+		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon,command=self.WHOdata,height=50,width=50)
+		self.__AIButton=tkinter.Button(self.__dataMenu,command=self.AIdata,text="AI",height=1,width=7)
 		#self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__WHOButton.grid(row=0,column=0,pady=0,sticky="n")
+		self.__WHOButton.grid()
+		self.__AIButton.grid()
+	def WHOdata(self):
+		print("buton pressed to activate callback for the mosquito data")
+	def AIdata(self):
+		print("button pressed to activate callback for AI data")
+
 	def userEnterValues(self):
 		#user enters equation here
 		#self.__equationWindow=tkinter.Toplevel()
