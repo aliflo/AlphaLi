@@ -176,6 +176,11 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__WHOButton.grid()
 		self.__AIButton.grid()
 		self.__UserDataButton.grid()
+
+		self.__WHOButtonTTP=CreateToolTip(self.__WHOButton, "World Health Organisation data, charting malaria cases in various nations from 2011-2017.\nSourced from https://www.who.int/gho/malaria/epidemic/cases/en/\nUser will be prompted to select a country and method to chart a graph of.")
+		self.__AIDataTTP=CreateToolTip(self.__AIButton, "Google trends data, rating the popularity of the search term 'Artificial Intelligence'\nin the search engine on a scale of 1-100, monthly since 2004. \nSourced from https://trends.google.com/trends/explore?date=all&geo=US&q=%2Fm%2F0mkz")
+		self.__UserDataButtonTTP=CreateToolTip(self.__UserDataButton, "Upload your own data. Should be a CSV file with first two comma-delimited\nvalues being x and y axis titles, followd by x and y data in delimited pairs \nseparated by line breaks.")
+
 	def WHOdata(self):
 		print("button pressed to activate callback for the mosquito data")
 		filepath=os.path.dirname(os.path.realpath(__file__))
@@ -222,16 +227,38 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			datafilewriter.writerow(["Year","Malaria cases in {0}".format(selectedCountry)])
 			for i in range(0,len(self.__malariaDict[selectedCountry])):
 				datafilewriter.writerow([i+1,(self.__malariaDict[selectedCountry])[i]])
-		self.AnalysisMethodSelection()
 		self.__CSVfilePath = filepath
+		self.AnalysisMethodSelection()
+		
 
 
 	def AIdata(self):
-		print("button pressed to activate callback for AI data")
+		self.__WHOButton.destroy()
+		self.__AIButton.destroy()
+		self.__UserDataButton.destroy()
+		filepath=os.path.dirname(os.path.realpath(__file__))
+		csvfolderpath=(os.path.dirname(filepath)+"\\CSV Data Files")
+		filepath=csvfolderpath+"\\AIData.csv"
+		self.__CSVfilePath=filepath
+		print(filepath)
+		self.AnalysisMethodSelection()
 
 	def UserData(self):
-		print("button pressed for user to enter their own dataset")
-
+		self.__WHOButton.destroy()
+		self.__AIButton.destroy()
+		self.__UserDataButton.destroy()
+		self.__csvLabel = tkinter.Label(self.__dataMenu,text="Enter the exact file path of the CSV file you wish to use. Example:\nC:\\Users\\tom\\OneDrive\\Documents\\SWCHS\\A-Levels\\EPQ\\AlphaLi\\CSV Data Files\\AIData.csv",bg=self.__coolbluedark)
+		filepath=tkinter.StringVar()
+		filepath.set("Enter file path")
+		self.__csvEntry = tkinter.Entry(self.__dataMenu,textvariable=filepath,width=80,bg=self.__coolblue)
+		nextbutton=tkinter.Button(self.__dataMenu,text="next",command=self.UserData1)
+		self.__csvLabel.grid()
+		self.__csvEntry.grid()
+		nextbutton.grid()
+	def UserData1(self):
+		self.__CSVfilePath=filepath.get()
+		print(self.__CSVfilePath)
+		
 	def AnalysisMethodSelection(self):
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
 		self.__selectedMethod = tkinter.StringVar()
@@ -242,6 +269,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		nextbutton.grid()
 	def AnalysisMethodSelection2(self):
 		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
+		print(instance.getEquations())
 
 
 
@@ -375,17 +403,19 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 
 class CreateEquation():
 	def __init__(self,datafilepath,selectedmethod):
+		equations=[]
+		path1=os.path.dirname(os.path.realpath(__file__))
 		if selectedmethod=="Exponential Regression":
-			path1=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))+"CSV Data Files"
-			cmd=["Rscript","exponential_R.r",str(datafilepath),path1]
-			x=subprocess.check_output(cmd, universal_newlines=True)
-			print (x)
+			print("hit1")
 		if selectedmethod=="Polynomial Regression":
 			print("hit2")
 		if selectedmethod=="Linear Regression":
 			print("hit3")
 		if selectedmethod=="B-Splines":
 			print("hit4")
+	def getEquations(self):
+		equations="2x+5"
+		return equations
 
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
