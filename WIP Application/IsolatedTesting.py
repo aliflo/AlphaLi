@@ -1,6 +1,6 @@
 import os
 filepath=os.path.dirname(os.path.realpath(__file__))
-malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\malaria_data_cleaned.csv")
+malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\AIData.csv")
 with open(malariapath) as data:
     k=[]
     for j in data:

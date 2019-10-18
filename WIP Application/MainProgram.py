@@ -216,8 +216,14 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#since this malaria data is a little different, we need to create the CSV file that will be sent to the analysis function
 		filepath=os.path.dirname(os.path.realpath(__file__))
 		csvfolderpath=(os.path.dirname(filepath)+"\\CSV Data Files")
-		with open(csvfolderpath+"\\temporary.csv") as datafile:
-			print("hit")
+		filepath=csvfolderpath+"\\temporary.csv"
+		with open(filepath,mode="w",newline="") as datafile:
+			datafilewriter=csv.writer(datafile,delimiter=",",quotechar='"',quoting=csv.QUOTE_MINIMAL)
+			datafilewriter.writerow(["Year","Malaria cases in {0}".format(selectedCountry)])
+			for i in range(0,len(self.__malariaDict[selectedCountry])):
+				datafilewriter.writerow([i+1,(self.__malariaDict[selectedCountry])[i]])
+		self.AnalysisMethodSelection()
+		self.__CSVfilePath = filepath
 
 
 	def AIdata(self):
@@ -225,6 +231,20 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 
 	def UserData(self):
 		print("button pressed for user to enter their own dataset")
+
+	def AnalysisMethodSelection(self):
+		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
+		self.__selectedMethod = tkinter.StringVar()
+		self.__selectedMethod.set("Select a method")
+		self.__methodsDropdown = tkinter.OptionMenu(self.__dataMenu,self.__selectedMethod,*methods)
+		nextbutton=tkinter.Button(self.__dataMenu,text="Analyse",command=self.AnalysisMethodSelection2)
+		self.__methodsDropdown.grid()
+		nextbutton.grid()
+	def AnalysisMethodSelection2(self):
+		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
+
+
+
 
 	def userEnterValues(self):
 		#user enters equation here
@@ -354,8 +374,18 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__pen2.goto(x,y)
 
 class CreateEquation():
-	def __init__(self,datafilepath):
-		print(datafilepath)
+	def __init__(self,datafilepath,selectedmethod):
+		if selectedmethod=="Exponential Regression":
+			path1=os.path.dirname(os.path.dirname(os.path.realpath(__file__)))+"CSV Data Files"
+			cmd=["Rscript","exponential_R.r",str(datafilepath),path1]
+			x=subprocess.check_output(cmd, universal_newlines=True)
+			print (x)
+		if selectedmethod=="Polynomial Regression":
+			print("hit2")
+		if selectedmethod=="Linear Regression":
+			print("hit3")
+		if selectedmethod=="B-Splines":
+			print("hit4")
 
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
