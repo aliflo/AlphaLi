@@ -1,5 +1,5 @@
 import numpy as np
-import turtle,tkinter,math,os,webbrowser
+import turtle,tkinter,math,os,webbrowser,subprocess,re,csv
 from PIL import Image, ImageTk, ImageFilter
 
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
@@ -207,11 +207,17 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__countriesDropdown.grid()
 		self.__nextbutton.grid()
 	def WHODataCallback1(self):
-		selectedData=self.__malariaDict[self.__selectedCountry.get()]
+		selectedCountry=self.__selectedCountry.get()
+		selectedData=self.__malariaDict[selectedCountry]
 		#displayanalysismethods
 		self.__countriesDropdown.destroy()
 		self.__simpleLabel.destroy()
 		self.__nextbutton.destroy()
+		#since this malaria data is a little different, we need to create the CSV file that will be sent to the analysis function
+		filepath=os.path.dirname(os.path.realpath(__file__))
+		csvfolderpath=(os.path.dirname(filepath)+"\\CSV Data Files")
+		with open(csvfolderpath+"\\temporary.csv") as datafile:
+			print("hit")
 
 
 	def AIdata(self):
@@ -347,7 +353,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			y=self.__b*x+self.__c
 			self.__pen2.goto(x,y)
 
-
+class CreateEquation():
+	def __init__(self,datafilepath):
+		print(datafilepath)
 
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
