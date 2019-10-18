@@ -181,23 +181,30 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		print(malariapath)
 		with open(malariapath) as csvdata:
 			listOfCountries = []
+			self.__malariaDataRaw = []
 			for j in csvdata:
 				listOfCountries.append((j.split(",")[0]))
+				self.__malariaDataRaw.append(j)
+		self.__malariaData=[]
+		for i in self.__malariaDataRaw:
+			#print(i[:-2])
+			self.__malariaData.append(i.split(","))
+		print(self.__malariaData)
+
+
 		self.__WHOButton.destroy()
 		self.__AIButton.destroy()
-		buttons=[]
-		for i in listOfCountries:
-			tempButton = tkinter.Button(self.__dataMenu,text=i,width=15)
-			buttons.append(tempButton)
-		column=0
-		row=0
-		for k in buttons:
-			k.grid(column=column,row=row)
-			row+=1
-			if row%25==0:
-				column+=1
-				row=0
-
+		print(listOfCountries)
+		self.__selectedCountry=tkinter.StringVar(self.__dataMenu)
+		self.__selectedCountry.set(listOfCountries[0])
+		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenu,self.__selectedCountry,*listOfCountries)
+		simpleLabel=tkinter.Label(self.__dataMenu,text="Select a country:",bg=self.__coolbluedark)
+		nextbutton=tkinter.Button(self.__dataMenu,text="Select",command=self.WHODataCallback1)
+		simpleLabel.grid()
+		self.__countriesDropdown.grid()
+		nextbutton.grid()
+	def WHODataCallback1(self):
+		print(self.__selectedCountry.get())
 
 	def AIdata(self):
 		print("button pressed to activate callback for AI data")
