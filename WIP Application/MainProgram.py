@@ -171,14 +171,15 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#self.__dataMenu["bg"]=self.__coolblue
 		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon,command=self.WHOdata,height=50,width=50)
 		self.__AIButton=tkinter.Button(self.__dataMenu,command=self.AIdata,text="AI",height=1,width=7)
+		self.__UserDataButton=tkinter.Button(self.__dataMenu,command=self.UserData,text="Upload your own data",height=1)
 		#self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__WHOButton.grid()
 		self.__AIButton.grid()
+		self.__UserDataButton.grid()
 	def WHOdata(self):
-		print("buton pressed to activate callback for the mosquito data")
+		print("button pressed to activate callback for the mosquito data")
 		filepath=os.path.dirname(os.path.realpath(__file__))
 		malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\malaria_data_cleaned.csv")
-		print(malariapath)
 		with open(malariapath) as csvdata:
 			listOfCountries = []
 			self.__malariaDataRaw = []
@@ -188,26 +189,36 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__malariaData=[]
 		for i in self.__malariaDataRaw:
 			#print(i[:-2])
-			self.__malariaData.append(i.split(","))
-		print(self.__malariaData)
-
-
+			self.__malariaData.append(i[:-1])
+		#split malaria data into a dictionary with country=key and list of cases for years 2011-2017 as item
+		self.__malariaDict={}
+		for k in self.__malariaData:
+			
+			self.__malariaDict[(k.split(","))[0]]=(k.split(","))[1:len(k)]
 		self.__WHOButton.destroy()
 		self.__AIButton.destroy()
-		print(listOfCountries)
+		self.__UserDataButton.destroy()
 		self.__selectedCountry=tkinter.StringVar(self.__dataMenu)
 		self.__selectedCountry.set(listOfCountries[0])
 		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenu,self.__selectedCountry,*listOfCountries)
-		simpleLabel=tkinter.Label(self.__dataMenu,text="Select a country:",bg=self.__coolbluedark)
-		nextbutton=tkinter.Button(self.__dataMenu,text="Select",command=self.WHODataCallback1)
-		simpleLabel.grid()
+		self.__simpleLabel=tkinter.Label(self.__dataMenu,text="Select a country:",bg=self.__coolbluedark)
+		self.__nextbutton=tkinter.Button(self.__dataMenu,text="Select",command=self.WHODataCallback1)
+		self.__simpleLabel.grid()
 		self.__countriesDropdown.grid()
-		nextbutton.grid()
+		self.__nextbutton.grid()
 	def WHODataCallback1(self):
-		print(self.__selectedCountry.get())
+		selectedData=self.__malariaDict[self.__selectedCountry.get()]
+		#displayanalysismethods
+		self.__countriesDropdown.destroy()
+		self.__simpleLabel.destroy()
+		self.__nextbutton.destroy()
+
 
 	def AIdata(self):
 		print("button pressed to activate callback for AI data")
+
+	def UserData(self):
+		print("button pressed for user to enter their own dataset")
 
 	def userEnterValues(self):
 		#user enters equation here
