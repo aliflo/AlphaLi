@@ -294,7 +294,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__dataButton.grid_forget()
 			self.__clearButton.grid_forget()
 		path=os.path.dirname(os.path.realpath(__file__))
-		print(path)
+		#print(path)
 		path2=path+"/Icons/"
 		self.__iconlist=[]
 		for i in sorted(os.listdir(path2)):
@@ -437,11 +437,19 @@ class CreateEquation():
 		equations=[]
 		path1=os.path.dirname(os.path.realpath(__file__))
 		if selectedmethod=="Exponential Regression":
-			print("hit1")
+			print ("hit1")
 		if selectedmethod=="Polynomial Regression":
 			print("hit2")
 		if selectedmethod=="Linear Regression":
-			print("hit3")
+			csvin=os.path.basename(datafilepath)
+			path1=os.path.dirname(datafilepath)+"/"
+			#print (os.path.dirname(os.path.dirname(path1))+"/Regression Programs/")
+			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/linear_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
+			#lil batch script run from python
+			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
+			#which is the output of the final line of rtesting.r (the linear regression coefficients). universal_newlines forces it to work with linux and windows line endings
+			intercept=float((re.split("\n",x)[1]).strip()) #Isolates the numbers from the output
+			grad=float((re.split("\n",x)[3]).strip())#And stores them in their related variables
 		if selectedmethod=="B-Splines":
 			print("hit4")
 	def getEquations(self):
