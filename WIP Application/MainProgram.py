@@ -437,7 +437,13 @@ class CreateEquation():
 		equations=[]
 		path1=os.path.dirname(os.path.realpath(__file__))
 		if selectedmethod=="Exponential Regression":
-			print ("hit1")
+			csvin=os.path.basename(datafilepath)
+			path1=os.path.dirname(datafilepath)+"/"
+			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/exponential_R.r",str(csvin),path1]
+			x=subprocess.check_output(cmd, universal_newlines=True)
+			a=((re.split("\n",x)[4]).strip()).split(" ",2)[0]
+			b=((re.split("\n",x)[4]).strip()).split(" ",2)[1]
+			print (a+"xe^"+b)
 		if selectedmethod=="Polynomial Regression":
 			print("hit2")
 		if selectedmethod=="Linear Regression":
