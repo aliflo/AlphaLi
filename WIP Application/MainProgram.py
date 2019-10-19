@@ -165,7 +165,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 	def WHOdata(self):
 		print("button pressed to activate callback for the mosquito data")
 		filepath=os.path.dirname(os.path.realpath(__file__))
-		malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\malaria_data_cleaned.csv")
 		malariapath=(os.path.dirname(filepath)+"/CSV Data Files/malaria_data_cleaned.csv")
 		with open(malariapath) as csvdata:
 			listOfCountries = []
@@ -319,7 +318,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equationButton.grid(row=1,column=0, sticky="n",pady=0)
 		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__manualButton.grid(row=124, sticky="s",pady=0)
-		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.dataMenu, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__dataButton = tkinter.Button(self.__root,image=self.__tableIcon,command=self.dataMenu, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__dataButton.grid(row=2,column=0, sticky="n",pady=0)
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
