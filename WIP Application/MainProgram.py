@@ -194,7 +194,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__zfactor=self.__zfactor*2/3
 			self.__canvas.scale("all",0,0,2/3,2/3)
 		self.drawAxis(w,h)
-		self.addLabels((w*self.__zfactor),(h*self.__zfactor),w,h)
+		self.addLabels((w*self.__zfactor**-1),(h*self.__zfactor**-1),w,h)
 		self.__canvas.delete(self.__zoomoutwindow,self.__zoominwindow)
 		self.__zoomoutwindow=self.__canvas.create_window(w-290,h-260,anchor="sw", window=self.__zoomoutButton)
 		self.__zoominwindow=self.__canvas.create_window(w-350,h-260,anchor="sw", window=self.__zoominButton)
