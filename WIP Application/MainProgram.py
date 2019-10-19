@@ -166,6 +166,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		print("button pressed to activate callback for the mosquito data")
 		filepath=os.path.dirname(os.path.realpath(__file__))
 		malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\malaria_data_cleaned.csv")
+		malariapath=(os.path.dirname(filepath)+"/CSV Data Files/malaria_data_cleaned.csv")
 		with open(malariapath) as csvdata:
 			listOfCountries = []
 			self.__malariaDataRaw = []
