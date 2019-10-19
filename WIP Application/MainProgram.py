@@ -248,18 +248,21 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__AIButton.destroy()
 		self.__UserDataButton.destroy()
 		self.__csvLabel = tkinter.Label(self.__dataMenu,text="Enter the exact file path of the CSV file you wish to use. Example:\nC:\\Users\\tom\\OneDrive\\Documents\\SWCHS\\A-Levels\\EPQ\\AlphaLi\\CSV Data Files\\AIData.csv",bg=self.__coolbluedark)
-		filepath=tkinter.StringVar()
-		filepath.set("Enter file path")
-		self.__csvEntry = tkinter.Entry(self.__dataMenu,textvariable=filepath,width=80,bg=self.__coolblue)
-		nextbutton=tkinter.Button(self.__dataMenu,text="next",command=self.UserData1)
+		self.__csvEntryFilepath=tkinter.StringVar()
+		self.__csvEntryFilepath.set("Enter file path")
+		self.__csvEntry = tkinter.Entry(self.__dataMenu,textvariable=self.__csvEntryFilepath,width=80,bg=self.__coolblue)
+		self.__nextbutton=tkinter.Button(self.__dataMenu,text="next",command=self.UserData1)
 		self.__csvLabel.grid()
 		self.__csvEntry.grid()
-		nextbutton.grid()
+		self.__nextbutton.grid()
 	def UserData1(self):
-		self.__CSVfilePath=filepath.get()
-		print(self.__CSVfilePath)
-		
+		self.__CSVfilePath=self.__csvEntryFilepath.get()
+		self.__nextbutton.destroy()
+		self.__csvLabel.destroy()
+		self.__csvEntry.destroy()
+		self.AnalysisMethodSelection()
 	def AnalysisMethodSelection(self):
+
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
 		self.__selectedMethod = tkinter.StringVar()
 		self.__selectedMethod.set("Select a method")
