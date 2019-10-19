@@ -165,7 +165,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 	def WHOdata(self):
 		print("button pressed to activate callback for the mosquito data")
 		filepath=os.path.dirname(os.path.realpath(__file__))
-		malariapath=(os.path.dirname(filepath)+"\\CSV Data Files\\malaria_data_cleaned.csv")
+		malariapath=(os.path.dirname(filepath)+"/CSV Data Files/malaria_data_cleaned.csv")
 		with open(malariapath) as csvdata:
 			listOfCountries = []
 			self.__malariaDataRaw = []
@@ -201,8 +201,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__nextbutton.destroy()
 		#since this malaria data is a little different, we need to create the CSV file that will be sent to the analysis function
 		filepath=os.path.dirname(os.path.realpath(__file__))
-		csvfolderpath=(os.path.dirname(filepath)+"\\CSV Data Files")
-		filepath=csvfolderpath+"\\temporary.csv"
+		csvfolderpath=(os.path.dirname(filepath)+"/CSV Data Files")
+		filepath=csvfolderpath+"/temporary.csv"
 		with open(filepath,mode="w",newline="") as datafile:
 			datafilewriter=csv.writer(datafile,delimiter=",",quotechar='"',quoting=csv.QUOTE_MINIMAL)
 			datafilewriter.writerow(["Year","Malaria cases in {0}".format(selectedCountry)])
@@ -218,8 +218,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__AIButton.destroy()
 		self.__UserDataButton.destroy()
 		filepath=os.path.dirname(os.path.realpath(__file__))
-		csvfolderpath=(os.path.dirname(filepath)+"\\CSV Data Files")
-		filepath=csvfolderpath+"\\AIData.csv"
+		csvfolderpath=(os.path.dirname(filepath)+"/CSV Data Files")
+		filepath=csvfolderpath+"/AIData.csv"
 		self.__CSVfilePath=filepath
 		print(filepath)
 		self.AnalysisMethodSelection()
@@ -228,7 +228,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__WHOButton.destroy()
 		self.__AIButton.destroy()
 		self.__UserDataButton.destroy()
-		self.__csvLabel = tkinter.Label(self.__dataMenu,text="Enter the exact file path of the CSV file you wish to use. Example:\nC:\\Users\\tom\\OneDrive\\Documents\\SWCHS\\A-Levels\\EPQ\\AlphaLi\\CSV Data Files\\AIData.csv",bg=self.__coolbluedark)
+		self.__csvLabel = tkinter.Label(self.__dataMenu,text="Enter the exact file path of the CSV file you wish to use. Example:\nC:/Users/tom/OneDrive/Documents/SWCHS/A-Levels/EPQ/AlphaLi/CSV Data Files/AIData.csv",bg=self.__coolbluedark)
 		self.__csvEntryFilepath=tkinter.StringVar()
 		self.__csvEntryFilepath.set("Enter file path")
 		self.__csvEntry = tkinter.Entry(self.__dataMenu,textvariable=self.__csvEntryFilepath,width=80,bg=self.__coolblue)
