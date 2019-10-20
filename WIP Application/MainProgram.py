@@ -471,11 +471,18 @@ class CreateEquation():
 			self.__equations=str(grad),"x",str(intercept)
 		if selectedmethod=="B-Splines":
 			print("hit4")
+			csvin=os.path.basename(datafilepath)
+			path1=os.path.dirname(datafilepath)+"/"
+			#print (os.path.dirname(os.path.dirname(path1))+"/Regression Programs/")
+			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
+			#lil batch script run from python
+			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
+			print(x)
 
 	def createEquations(self):
 		pass
 	def getEquations(self):
-		#self.__equations="2x+5"
+		#self.__equations should be a list of equations
 		return self.__equations
 
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
