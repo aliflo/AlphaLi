@@ -1,7 +1,6 @@
 import numpy as np
-import turtle,tkinter,math,os,webbrowser,subprocess,re,csv,tkinter.font
+import turtle,tkinter,math,os,webbrowser,subprocess,re,csv,tkinter.font,sympy
 from PIL import Image, ImageTk, ImageFilter
-
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
 #but the advantage of doing just import tkinter is that it's technically "cleaner" code as you don't risk possible 
 #conflicts in large programs with many imports - e.g., your "neoMaths" mod also has function called Frame for some reason
@@ -26,7 +25,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.color("blue")
 		self.__pen2.shape("circle")
 		self.__pen2.turtlesize(stretch_wid=0.25,stretch_len=0.25) 
-		self.__pen2.goto(-1,0)
+		self.__pen2.goto(0,0)
 		#a pen, but we can use it to draw the axes
 		self.buttons(h,w,init)
 		self.__screen.hideturtle()#Hides the pen. It's at the centre of the screen right now
@@ -255,19 +254,16 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
 		print(instance.getEquations())
 
-	def userEnterValues(self):
-		#user enters equation here
-		#self.__equationWindow=tkinter.Toplevel()
-		#self.__equationWindow.title("Enter an equation")
-		#self.__equationEntry = tkinter.Entry(self.__equationWindow)
-		#self.__equationEntry.focus_set()
-		#self.__equationEntry.grid(row=21,column=10)
-		#self.__equationWindow.bind("<Return>", self.defineEquation)
+	def userEnterValues(self,h,w):
+		self.__equationWindow=tkinter.Toplevel()
+		self.__equationWindow.title("Enter an equation")
+		self.__equationEntry = tkinter.Entry(self.__equationWindow)
+		self.__equationEntry.focus_set()
+		self.__equationEntry.grid(row=21,column=10)
+		#self.__equationWindow.bind("<Return>", self.defineEquation(None, self.__equationEntry.get()))
 		#QOL change, enter sends the entry also instead of clicking button
-		#self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.defineEquation(None))
-		#self.__equationEntered.grid(row=21,column=11)
-		print ("equation button pressed")
-		self.__canvas.scale("all",0,0,0.5,0.5)
+		self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.defineEquation(None, self.__equationEntry.get(),h,w))
+		self.__equationEntered.grid(row=21,column=11)
 	def zoom(self,h,w,zin):
 		self.__screen.clear()
 		if zin==True:
@@ -314,7 +310,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__coolbluedark="#3b91a3"
 		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=62,height=62,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
 		self.__canvasButton.grid(row=0,column=0, sticky="n",pady=0)
-		self.__equationButton = tkinter.Button(self.__root,image=self.__equationIcon,command=self.userEnterValues, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
+		self.__equationButton = tkinter.Button(self.__root,image=self.__equationIcon,command=lambda: self.userEnterValues(h,w), highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__equationButton.grid(row=1,column=0, sticky="n",pady=0)
 		self.__manualButton=tkinter.Button(self.__root,image=self.__manualIcon,command=self.manual, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__manualButton.grid(row=124, sticky="s",pady=0)
@@ -388,50 +384,58 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__colourinwindow.destroy()
 		self.__canvasWindow.destroy()
 		self.canvasButtonCallback()
-	def defineEquation(self,event):
-		self.__equation = self.__equationEntry.get()
-		self.__equationWindow.destroy()
-		instance = AnalyseEquation(self.__equation)
-		#AnalyseEquation.returnValues(self)
-		#print("A: {0}\nB: {1}\nC: {2}\nLin: {3}\nTpoint: {4}".format(instance.getA(),instance.getB(),instance.getC(),instance.getLinear(),instance.getCanvasBound()))
-		self.__a = instance.getA()
-		self.__b = instance.getB()
-		self.__c = instance.getC()
-		self.__lin = instance.getLinear()
-		self.__canvasBound = instance.getCanvasBound()
-		self.__canvasBoundLength=instance.getCanvasBoundLength()
-		self.drawGraph()
-	def drawGraph(self):
-		x=(self.__canvasBound) #The start point is determined using maxPointA, meaning the graph only draws within the screen boundary
-		if self.__lin==False:
-			if self.__a<1:
-				self.__pen2.ht()
-			y=(self.__a*(x**2))+(self.__b*x)+self.__c
-			if x>0:
-				negativeStart=True
-			if 0>x:
-				negativeStart=False
-			for i in range (0,(self.__canvasBoundLength+1)): #Draws the graph by calculating the x and y values using the equation stated earlier
-				self.__pen2.penup()        #Calculates the y values 250 times, incrementing x by 1 each time
-				self.__pen2.goto(x,y)
-				self.__pen2.pendown()
-				y=(self.__a*x**2)+(self.__b*x)+self.__c
-				if negativeStart==False:
-					x=x+1
-				if negativeStart==True:
-					x=x-1
-				self.__pen2.goto(x,y)
-			self.__pen2.st()
+	def defineEquation(self,event,equ,h,w):
+		self.__equation = equ
+		eqlist=[char for char in self.__equation]
+		for i in range(len(eqlist)): #put exponentials in the right form
+		    if eqlist[i]=="e" and eqlist[i+1]=="^":
+		        for j in range (len(eqlist[(i+2):])):
+		            if eqlist[(i+2):][j].isdigit()==False and eqlist[(i+2):][j]!="x":
+		                eqlist.insert((i+2+j),")")
+		                break
+		            elif (j+1)==len(eqlist[(i+2):]):
+		                eqlist.append(")")
+		        self.__equation="".join(eqlist)
+		        self.__equation=self.__equation.replace("e^"," math.exp(")
+		self.__equation=self.__equation.replace("^","**") #Put powers in the right form
+		eqlist=[char for char in self.__equation]
+		for i in range(len(eqlist)): #Put multiplication in the right form
+		    if eqlist[i]=="x" and i!=0 and eqlist[i-1].isdigit():
+		        eqlist.insert(i, "*")
+		self.__equation="".join(eqlist)
+		self.equationBounds(h,w)
+	def equationBounds(self,h,w):
+		x=sympy.Symbol("x")
+		boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-(h/2),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+(h/2+25),x)]
+		for i in range(len(boundlist)):
+			newlist=[]
+			for j in range(len(boundlist[i])):
+				if "I" not in str(boundlist[i][j]):
+					newlist.append(eval(str(boundlist[i][j]).replace("sqrt","math.sqrt").replace("log","math.log")))
+			boundlist[i]=newlist
+		boundlist = [item for sublist in boundlist for item in sublist]
+		for i in boundlist:
+			if i==[]:
+				boundlist.remove(i)
+		boundlist=sorted(boundlist)
+		self.drawGraph(boundlist,w)
+	def drawGraph(self,boundlist,w):
+		self.__pen2.speed(0)
+		self.__pen2.penup()
+		print ("hit")
+		if "exp" not in self.__equation:
+			x1=boundlist[0]
 		else:
-			self.__pen2.penup()
-			x=-250
-			y=self.__b*x+self.__c
-			self.__pen2.goto(x,y)
+			x1=-(w/2)
+		x2=boundlist[len(boundlist)-1]
+		while x1<=x2:
+			print (x1)
+			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
+			self.__pen2.goto(x1,y)
 			self.__pen2.pendown()
-			x=250
-			y=self.__b*x+self.__c
-			self.__pen2.goto(x,y)
-
+			x1=x1+1
+		self.__pen2.goto(x2,y)
+			
 class CreateEquation():
 	def __init__(self,datafilepath,selectedmethod):
 		equations=[]
