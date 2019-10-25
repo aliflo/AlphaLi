@@ -434,6 +434,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__pen2.goto(x1,y)
 			self.__pen2.pendown()
 			x1=x1+1
+		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
 		self.__pen2.goto(x2,y)
 			
 class CreateEquation():
