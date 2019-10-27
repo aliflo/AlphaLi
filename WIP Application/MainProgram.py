@@ -386,11 +386,12 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.canvasButtonCallback()
 	def defineEquation(self,event,equ,h,w):
 		self.__equation = equ
+		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #put exponentials in the right form
 		    if eqlist[i]=="e" and eqlist[i+1]=="^":
 		        for j in range (len(eqlist[(i+2):])):
-		            if eqlist[(i+2):][j].isdigit()==False and eqlist[(i+2):][j]!="x":
+		            if eqlist[(i+2):][j].isdigit()==False and eqlist[(i+2):][j]!="x" and eqlist[(i+2):][j]!="/":
 		                eqlist.insert((i+2+j),")")
 		                break
 		            elif (j+1)==len(eqlist[(i+2):]):
@@ -398,10 +399,12 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		        self.__equation="".join(eqlist)
 		        self.__equation=self.__equation.replace("e^"," math.exp(")
 		self.__equation=self.__equation.replace("^","**") #Put powers in the right form
+		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #Put multiplication in the right form
-		    if eqlist[i]=="x" and i!=0 and eqlist[i-1].isdigit():
-		        eqlist.insert(i, "*")
+		    if eqlist[i]=="x" and i!=0 and eqlist[i-1].isdigit() or (eqlist[i]=="m" and i!=0 and eqlist[i-1].isdigit()):
+			    print (eqlist[i])
+			    eqlist.insert(i, "*")
 		self.__equation="".join(eqlist)
 		self.equationBounds(h,w)
 	def equationBounds(self,h,w):
@@ -420,6 +423,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		boundlist=sorted(boundlist)
 		self.drawGraph(boundlist,w)
 	def drawGraph(self,boundlist,w):
+		print (self.__equation)
 		self.__pen2.speed(0)
 		self.__pen2.penup()
 		print ("hit")
