@@ -413,7 +413,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.equationBounds(h,w)
 	def equationBounds(self,h,w):
 		x=sympy.Symbol("x")
-		boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-(h/2),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+(h/2+25),x)]
+		boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)]
 		for i in range(len(boundlist)):
 			newlist=[]
 			for j in range(len(boundlist[i])):
@@ -427,23 +427,21 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		boundlist=sorted(boundlist)
 		self.drawGraph(boundlist,w)
 	def drawGraph(self,boundlist,w):
-		print (self.__equation)
 		self.__pen2.speed(0)
 		self.__pen2.penup()
-		print ("hit")
+		self.__pen2.goto(0,0)
 		if "exp" not in self.__equation:
 			x1=boundlist[0]
 		else:
 			x1=-(w/2)
 		x2=boundlist[len(boundlist)-1]
 		while x1<=x2:
-			print (x1)
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
-			self.__pen2.goto(x1,y)
+			self.__pen2.goto(self.__zfactor*x1,self.__zfactor*y)
 			self.__pen2.pendown()
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
-		self.__pen2.goto(x2,y)
+		self.__pen2.goto(self.__zfactor*x2,self.__zfactor*y)
 			
 class CreateEquation():
 	def __init__(self,datafilepath,selectedmethod):
