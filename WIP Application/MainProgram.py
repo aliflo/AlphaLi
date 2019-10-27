@@ -388,6 +388,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__canvasWindow.destroy()
 		self.canvasButtonCallback()
 	def defineEquation(self,event,equ,h,w):
+		self.__equationWindow.destroy()
 		self.__equation = equ
 		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
