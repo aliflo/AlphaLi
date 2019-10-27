@@ -257,26 +257,29 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
+		self.__equationInfo=tkinter.Label(self.__equationWindow,text="Enter an equation:", anchor="w").grid(columnspan=2,padx=5,pady=5)
 		self.__equationEntry = tkinter.Entry(self.__equationWindow)
 		self.__equationEntry.focus_set()
-		self.__equationEntry.grid(row=21,column=10)
+		self.__equationEntry.grid(row=1,column=0, padx=5, pady=0, columnspan=2)
 		#self.__equationWindow.bind("<Return>", self.defineEquation(None, self.__equationEntry.get()))
 		#QOL change, enter sends the entry also instead of clicking button
 		self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.defineEquation(None, self.__equationEntry.get(),h,w))
-		self.__equationEntered.grid(row=21,column=11)
+		self.__equationEntered.grid(row=2,column=1, padx=5, pady=5)
+		self.__cancelEquation = tkinter.Button(self.__equationWindow,text="Cancel", command= lambda: self.__equationWindow.destroy())
+		self.__cancelEquation.grid(row=2,column=0, padx=5, pady=5)
 	def zoom(self,h,w,zin):
 		self.__screen.clear()
-		if zin==True:
+		self.__canvas.delete(self.__zoomoutwindow,self.__zoominwindow)
+		if zin:
 			self.__zfactor=self.__zfactor*3/2
 			self.__canvas.scale("all",0,0,3/2,3/2)
 		else:
 			self.__zfactor=self.__zfactor*2/3
 			self.__canvas.scale("all",0,0,2/3,2/3)
+		self.__zoomoutwindow=self.__canvas.create_window(w-300*(w/500),h-260*(h/500),anchor="sw", height=50, width=50, window=self.__zoomoutButton)
+		self.__zoominwindow=self.__canvas.create_window(w-(300*(w/500)+60),h-260*(h/500),anchor="sw", height=50, width=50,window=self.__zoominButton)
 		self.drawAxis(w,h)
 		self.addLabels((w*self.__zfactor**-1),(h*self.__zfactor**-1),w,h)
-		self.__canvas.delete(self.__zoomoutwindow,self.__zoominwindow)
-		self.__zoomoutwindow=self.__canvas.create_window(w-290,h-260,anchor="sw", window=self.__zoomoutButton)
-		self.__zoominwindow=self.__canvas.create_window(w-350,h-260,anchor="sw", window=self.__zoominButton)
 	def clearCanvas(self):
 		self.__pen2.clear()
 		self.__pen2.penup()
@@ -319,10 +322,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=62,height=62, bg=self.__coolblue, activebackground=self.__coolbluedark)
 		self.__clearButton.grid(row=3, sticky="n",pady=0)
 		zoomfont = tkinter.font.Font(family='Helvetica', size=26, weight="bold")
-		self.__zoominButton=tkinter.Button(self.__root, text="+", command=lambda: self.zoom(h,w,True),highlightthickness=0, bd=0,font=zoomfont, anchor="sw", width=1)
-		self.__zoominwindow=self.__canvas.create_window(w-350*(w/500),h-260*(h/500),anchor="sw", window=self.__zoominButton)
-		self.__zoomoutButton=tkinter.Button(self.__root, text="-", command=lambda: self.zoom(h,w,False),highlightthickness=0, bd=0,font=zoomfont, width=1, anchor="sw")
-		self.__zoomoutwindow=self.__canvas.create_window(w-300*(w/500),h-260*(h/500),anchor="sw", window=self.__zoomoutButton)
+		self.__zoominButton=tkinter.Button(self.__root, text="+", command=lambda: self.zoom(h,w,True),highlightthickness=0, bd=0,font=zoomfont,height=1,width=1)
+		self.__zoominwindow=self.__canvas.create_window(w-(300*(w/500)+60),h-260*(h/500),anchor="sw",height=50, width=50, window=self.__zoominButton)
+		self.__zoomoutButton=tkinter.Button(self.__root, text="-", command=lambda: self.zoom(h,w,False),highlightthickness=0, bd=0,font=zoomfont,height=1,width=1)
+		self.__zoomoutwindow=self.__canvas.create_window(w-300*(w/500),h-260*(h/500),anchor="sw",height=50, width=50, window=self.__zoomoutButton)
 		#tooltip creation using CreateToolTip class as taken from daniweb
 		#see bibliography (vegaseat, 2015)
 		self.__clearButtonTTP=CreateToolTip(self.__clearButton, "Clear Canvas")
