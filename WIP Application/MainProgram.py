@@ -26,6 +26,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.shape("circle")
 		self.__pen2.turtlesize(stretch_wid=0.25,stretch_len=0.25) 
 		self.__pen2.goto(0,0)
+		self.__pen2.ht()
 		#a pen, but we can use it to draw the axes
 		self.buttons(h,w,init)
 		self.__screen.hideturtle()#Hides the pen. It's at the centre of the screen right now
@@ -406,7 +407,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #Put multiplication in the right form
-		    if eqlist[i]=="x" and i!=0 and eqlist[i-1].isdigit() or (eqlist[i]=="m" and i!=0 and eqlist[i-1].isdigit()):
+		    if eqlist[i]=="x" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")") or (eqlist[i]=="m" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")")):
 			    print (eqlist[i])
 			    eqlist.insert(i, "*")
 		self.__equation="".join(eqlist)
@@ -427,8 +428,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		boundlist=sorted(boundlist)
 		self.drawGraph(boundlist,w)
 	def drawGraph(self,boundlist,w):
-		self.__pen2.speed(0)
 		self.__pen2.penup()
+		self.__pen2.speed(0)
 		self.__pen2.goto(0,0)
 		if "exp" not in self.__equation:
 			x1=boundlist[0]
