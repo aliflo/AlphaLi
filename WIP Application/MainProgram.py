@@ -499,10 +499,7 @@ class CreateEquation():
 		print(x)
 		self.createEquations(x)
 
-	def createEquations(self,equation):
-		print(self.__equations)
 	def getEquations(self):
-		#self.__equations should be a list of equations
 		return self.__equations
 
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
