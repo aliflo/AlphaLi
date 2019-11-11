@@ -500,12 +500,7 @@ class CreateEquation():
 		self.createEquations(x)
 
 	def createEquations(self,equation):
-		print(equation)
-		self.__equations=""
-		#if self.__method=="Linear Regression":
-		#	self.__equations+=equation[0][0]
-		#	self.__equations+=equation[0][1]
-		#	self.__equations+=equation[0][2]
+		print(self.__equations)
 	def getEquations(self):
 		#self.__equations should be a list of equations
 		return self.__equations
