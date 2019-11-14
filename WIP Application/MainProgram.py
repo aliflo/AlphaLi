@@ -496,8 +496,7 @@ class CreateEquation():
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
-		print(x)
-		self.createEquations(x)
+			print(x)
 
 	def getEquations(self):
 		return self.__equations
