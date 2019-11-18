@@ -146,17 +146,25 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__itemNumConfirm.grid_forget()
 		self.tableCreate()
 	def dataMenu(self):
-		self.__dataMenu=tkinter.Toplevel(self.__root,bg=self.__coolbluedark,height=300,width=300)
+		self.__dataMenu=tkinter.Toplevel(self.__root,bg=self.__coolbluedark)
 		self.__dataMenu.title("Data Menu")
 		self.__dataMenu.grid()
 		#self.__dataMenu["bg"]=self.__coolblue
-		self.__WHOButton = tkinter.Button(self.__dataMenu,image=self.__mosquitoIcon,command=self.WHOdata,height=50,width=50)
-		self.__AIButton=tkinter.Button(self.__dataMenu,command=self.AIdata,text="AI",height=1,width=7)
-		self.__UserDataButton=tkinter.Button(self.__dataMenu,command=self.UserData,text="Upload your own data",height=1)
-		#self.__clearButton = tkinter.Button(self.__root,image=self.__clearIcon,command=self.clearCanvas, highlightthickness=0, bd=0,width=64,height=64, bg=self.__coolblue, activebackground=self.__coolbluedark)
-		self.__WHOButton.grid()
-		self.__AIButton.grid()
-		self.__UserDataButton.grid()
+		self.__dataMenuFrame = tkinter.Frame(self.__dataMenu,bg=self.__coolbluedark,height=250,width=160)
+		self.__WHOButton = tkinter.Button(self.__dataMenuFrame,image=self.__mosquitoIcon,command=self.WHOdata,height=64,width=64)
+		self.__AIButton=tkinter.Button(self.__dataMenuFrame,command=self.AIdata,image=self.__AIICon,height=64,width=64)
+		self.__UserDataButton=tkinter.Button(self.__dataMenuFrame,command=self.UserData,image=self.__uploadIcon,height=64,width=64)
+		
+		self.__dataMenuFrame.grid(row=0,column=0,sticky="EW")
+		self.__dataMenuFrame.grid_columnconfigure(0, weight=1)
+		self.__dataMenuFrame.grid_columnconfigure(2, weight=1)
+		self.__dataMenuFrame.grid_rowconfigure(1,weight=1)
+		self.__dataMenuFrame.grid_rowconfigure(3,weight=1)
+		
+		self.__dataMenuFrame.grid_propagate(False)
+		self.__WHOButton.grid(row=0,column=1,sticky="E")
+		self.__AIButton.grid(row=2,column=1,sticky="E")
+		self.__UserDataButton.grid(row=4,column=1,sticky="E")
 
 		self.__WHOButtonTTP=CreateToolTip(self.__WHOButton, "World Health Organisation data, charting malaria cases in various nations from 2011-2017.\nSourced from https://www.who.int/gho/malaria/epidemic/cases/en/\nUser will be prompted to select a country and method to chart a graph of.")
 		self.__AIDataTTP=CreateToolTip(self.__AIButton, "Google trends data, rating the popularity of the search term 'Artificial Intelligence'\nin the search engine on a scale of 1-100, monthly since 2004. \nSourced from https://trends.google.com/trends/explore?date=all&geo=US&q=%2Fm%2F0mkz")
@@ -186,12 +194,12 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__UserDataButton.destroy()
 		self.__selectedCountry=tkinter.StringVar(self.__dataMenu)
 		self.__selectedCountry.set(listOfCountries[0])
-		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenu,self.__selectedCountry,*listOfCountries)
-		self.__simpleLabel=tkinter.Label(self.__dataMenu,text="Select a country:",bg=self.__coolbluedark)
-		self.__nextbutton=tkinter.Button(self.__dataMenu,text="Select",command=self.WHODataCallback1)
-		self.__simpleLabel.grid()
-		self.__countriesDropdown.grid()
-		self.__nextbutton.grid()
+		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenuFrame,self.__selectedCountry,*listOfCountries)
+		self.__simpleLabel=tkinter.Label(self.__dataMenuFrame,text="Select a country:",bg=self.__coolbluedark)
+		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,text="Select",command=self.WHODataCallback1)
+		self.__simpleLabel.grid(row=1,column=1)
+		self.__countriesDropdown.grid(row=2,column=1)
+		self.__nextbutton.grid(row=3,column=1)
 	def WHODataCallback1(self):
 		selectedCountry=self.__selectedCountry.get()
 		selectedData=self.__malariaDict[selectedCountry]
@@ -231,11 +239,11 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__csvLabel = tkinter.Label(self.__dataMenu,text="Enter the exact file path of the CSV file you wish to use. Example:\nC:/Users/tom/OneDrive/Documents/SWCHS/A-Levels/EPQ/AlphaLi/CSV Data Files/AIData.csv",bg=self.__coolbluedark)
 		self.__csvEntryFilepath=tkinter.StringVar()
 		self.__csvEntryFilepath.set("Enter file path")
-		self.__csvEntry = tkinter.Entry(self.__dataMenu,textvariable=self.__csvEntryFilepath,width=80,bg=self.__coolblue)
-		self.__nextbutton=tkinter.Button(self.__dataMenu,text="next",command=self.UserData1)
-		self.__csvLabel.grid()
-		self.__csvEntry.grid()
-		self.__nextbutton.grid()
+		self.__csvEntry = tkinter.Entry(self.__dataMenuFrame,textvariable=self.__csvEntryFilepath,width=80,bg=self.__coolblue)
+		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,text="next",command=self.UserData1)
+		self.__csvLabel.grid(row=0)
+		self.__csvEntry.grid(row=3,column=1)
+		self.__nextbutton.grid(row=4,column=1)
 	def UserData1(self):
 		self.__CSVfilePath=self.__csvEntryFilepath.get()
 		self.__nextbutton.destroy()
@@ -310,6 +318,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__tableIcon=ImageTk.PhotoImage(self.__iconlist[3])
 		self.__manualIcon=ImageTk.PhotoImage(self.__iconlist[4])
 		self.__mosquitoIcon=ImageTk.PhotoImage(self.__iconlist[5])
+		self.__AIICon=ImageTk.PhotoImage(self.__iconlist[6])
+		self.__uploadIcon=ImageTk.PhotoImage(self.__iconlist[7])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
 		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=62,height=62,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
