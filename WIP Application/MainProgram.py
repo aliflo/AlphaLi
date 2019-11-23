@@ -12,6 +12,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.setupScreen(500,500,True)#runs the setupScreen method
 		self.__root.mainloop()
 	def setupScreen(self, w, h,init):
+		self.__h,self.__w=h,w
 		self.__coolblue="#46ACC2"
 		self.__canvas = tkinter.Canvas(master = self.__root, height = h, width = w)#creates a TKINTER canvas, not
 		#a turtle one, with specifications 500*500. Possible TODO - make the screen size scale to the user's pc using winfo.getwidth?
@@ -261,7 +262,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		nextbutton.grid()
 	def AnalysisMethodSelection2(self):
 		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
-		print(instance.getEquations())
+		self.defineEquation(None,instance.getEquations())
 
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
@@ -272,6 +273,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equationEntry.grid(row=1,column=0, padx=5, pady=0, columnspan=2)
 		#self.__equationWindow.bind("<Return>", self.defineEquation(None, self.__equationEntry.get()))
 		#QOL change, enter sends the entry also instead of clicking button
+		self.__equationWindow.bind("<Return>",lambda event:self.defineEquation(None, self.__equationEntry.get(),h,w))
 		self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.defineEquation(None, self.__equationEntry.get(),h,w))
 		self.__equationEntered.grid(row=2,column=1, padx=5, pady=5)
 		self.__cancelEquation = tkinter.Button(self.__equationWindow,text="Cancel", command= lambda: self.__equationWindow.destroy())
@@ -398,7 +400,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__colourinwindow.destroy()
 		self.__canvasWindow.destroy()
 		self.canvasButtonCallback()
-	def defineEquation(self,event,equ,h,w):
+	def defineEquation(self,event,equ):
+		h,w=self.__h,self.__w
 		self.__equationWindow.destroy()
 		self.__equation = equ
 		self.__equation=self.__equation.replace(" ","")
@@ -418,7 +421,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #Put multiplication in the right form
 		    if eqlist[i]=="x" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")") or (eqlist[i]=="m" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")")):
-			    print (eqlist[i])
 			    eqlist.insert(i, "*")
 		self.__equation="".join(eqlist)
 		self.equationBounds(h,w)
@@ -453,7 +455,32 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
 		self.__pen2.goto(self.__zfactor*x2,self.__zfactor*y)
-			
+class CreateToolTip(object): #(vegaseat, 2015) see bibliography
+    '''
+    create a tooltip for a given widget
+    '''
+    def __init__(self, widget, text='widget info'):
+        self.widget = widget
+        self.text = text
+        self.widget.bind("<Enter>", self.enter)
+        self.widget.bind("<Leave>", self.close)
+    def enter(self, event=None):
+        x = y = 0
+        x, y, cx, cy = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 65
+        y += self.widget.winfo_rooty() + 50
+        # creates a toplevel window
+        self.tw = tkinter.Toplevel(self.widget)
+        # Leaves only the label and removes the app window
+        self.tw.wm_overrideredirect(True)
+        self.tw.wm_geometry("+%d+%d" % (x, y))
+        label = tkinter.Label(self.tw, text=self.text, justify='left',
+                       background='grey', relief='solid', borderwidth=0, fg="white",
+                       font=("helvetica", "10", "normal",))
+        label.pack(ipadx=1)
+    def close(self, event=None):
+        if self.tw:
+            self.tw.destroy()
 class CreateEquation():
 	def __init__(self,datafilepath,selectedmethod):
 		self.__method=selectedmethod
@@ -486,7 +513,7 @@ class CreateEquation():
 			            foo+=1
 			        else:
 			            xcoefficient=float(value)
-			self.__equations=str(xsquaredcoefficient),"x^2",str(xcoefficient),"x",str(intercept)
+			self.__equations="".join([str(xsquaredcoefficient),"x^2+",str(xcoefficient),"x+",str(intercept)])
 		if self.__method=="Linear Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
@@ -499,7 +526,6 @@ class CreateEquation():
 			grad=((re.split("\n",x)[3]).strip())#And stores them in their related variables
 			self.__equations=str(grad),"x",str(intercept)
 		if self.__method=="B-Splines":
-			print("hit4")
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
 			#print (os.path.dirname(os.path.dirname(path1))+"/Regression Programs/")
@@ -510,32 +536,4 @@ class CreateEquation():
 
 	def getEquations(self):
 		return self.__equations
-
-class CreateToolTip(object): #(vegaseat, 2015) see bibliography
-    '''
-    create a tooltip for a given widget
-    '''
-    def __init__(self, widget, text='widget info'):
-        self.widget = widget
-        self.text = text
-        self.widget.bind("<Enter>", self.enter)
-        self.widget.bind("<Leave>", self.close)
-    def enter(self, event=None):
-        x = y = 0
-        x, y, cx, cy = self.widget.bbox("insert")
-        x += self.widget.winfo_rootx() + 65
-        y += self.widget.winfo_rooty() + 50
-        # creates a toplevel window
-        self.tw = tkinter.Toplevel(self.widget)
-        # Leaves only the label and removes the app window
-        self.tw.wm_overrideredirect(True)
-        self.tw.wm_geometry("+%d+%d" % (x, y))
-        label = tkinter.Label(self.tw, text=self.text, justify='left',
-                       background='grey', relief='solid', borderwidth=0, fg="white",
-                       font=("helvetica", "10", "normal",))
-        label.pack(ipadx=1)
-    def close(self, event=None):
-        if self.tw:
-            self.tw.destroy()
-
 instance = Application(tkinter.Tk())
