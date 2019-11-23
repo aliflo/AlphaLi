@@ -5,14 +5,13 @@
 
 library(SplinesUtils)
 pyin <- commandArgs(trailingOnly=TRUE)
-csvfile <- read.csv(file=pyin[1])#sets working directory to the above string
-col1<-unlist(lapply(csvfile[colnames(csvfile)[1]], log))
-col2<-unlist(lapply(csvfile[colnames(csvfile)[2]], log)) #Takes logs of all the items in the first two columns and stores them in new columns
-names(csvfile) <- c(col1,col2)#renames the headers becuase they're very long and cause formatting issues
-model <- lm(csvfile$searchInterest ~ bs(csvfile$col1, df=7))#a linear model of months against a bspline of search interest
-piecewisePoly <- RegBsplineAsPiecePoly(model, "bs(col1$col2, df = 7)",shift=FALSE)#creates the piecewise polynomials
+setwd(pyin[2])#sets working directory to the above string
+csvfile <- read.csv(file=pyin[1],header=TRUE)#read.csv(file=pyin[1],header=TRUE)#reads the csv file into a dataframe with headers
+names(csvfile) <- c("months","searchInterest")#renames the headers becuase they're very long and cause formatting issues
+model <- lm(csvfile$searchInterest ~ bs(csvfile$months, df=7))#a linear model of months against a bspline of search interest
+piecewisePoly <- RegBsplineAsPiecePoly(model, "bs(csvfile$months, df = 7)",shift=FALSE)#creates the piecewise polynomials
 piecewisePoly
 finalcoef <- piecewisePoly$PiecePoly$coef
 finalcoef[1, ] <- finalcoef[1, ] + model$coefficients[1]
 finalcoef
-attr(bs(csvfile$col1, df=7),"knots")
+attr(bs(csvfile$months, df=7),"knots") 
