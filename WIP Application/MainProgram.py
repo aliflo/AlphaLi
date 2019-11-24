@@ -35,7 +35,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.addLabels(w,h,w,h)
 	def manual(self):
 		os.chdir(os.path.dirname(os.path.realpath(__file__)))
-		print ("manual pressed")
 		webbrowser.open("manual.html",new=2)	
 	def drawAxis(self,x,y):
 		self.__screen.speed(0)#speed is instant
@@ -126,12 +125,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__tableInput.destroy()
 		else:
 			x = regressionAnalysisInstance(self.__dictionaryOfValues)
-			#print(x.values[0])
 			self.__equation = ("{0}x+{1}".format(x.values[1],x.values[0]))
-			#print(self.__equation)
 			instance = AnalyseEquation(self.__equation)
 			#AnalyseEquation.returnValues(self)
-			#print("A: {0}\nB: {1}\nC: {2}\nLin: {3}\nTpoint: {4}".format(instance.getA(),instance.getB(),instance.getC(),instance.getLinear(),instance.getCanvasBound()))
 			self.__a = instance.getA()
 			self.__b = instance.getB()
 			self.__c = instance.getC()
@@ -139,7 +135,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__canvasBound = instance.getCanvasBound()
 			self.drawGraph()
 			self.__tableInput.destroy()
-		#print(self.__dictionaryOfValues)
 	def itemNumConfirmCallback(self,Event):
 		self.__tHeight=int(self.__itemNumEntry.get())
 		self.__itemNumEntry.grid_forget()
@@ -172,7 +167,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__UserDataButtonTTP=CreateToolTip(self.__UserDataButton, "Upload your own data. Should be a CSV file with first two comma-delimited\nvalues being x and y axis titles, followd by x and y data in delimited pairs \nseparated by line breaks.")
 
 	def WHOdata(self):
-		print("button pressed to activate callback for the mosquito data")
 		filepath=os.path.dirname(os.path.realpath(__file__))
 		malariapath=(os.path.dirname(filepath)+"/CSV Data Files/malaria_data_cleaned.csv")
 		with open(malariapath) as csvdata:
@@ -183,7 +177,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				self.__malariaDataRaw.append(j)
 		self.__malariaData=[]
 		for i in self.__malariaDataRaw:
-			#print(i[:-2])
 			self.__malariaData.append(i[:-1])
 		#split malaria data into a dictionary with country=key and list of cases for years 2011-2017 as item
 		self.__malariaDict={}
@@ -230,7 +223,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		csvfolderpath=(os.path.dirname(filepath)+"/CSV Data Files")
 		filepath=csvfolderpath+"/AIData.csv"
 		self.__CSVfilePath=filepath
-		print(filepath)
 		self.AnalysisMethodSelection()
 
 	def UserData(self):
@@ -308,7 +300,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__dataButton.grid_forget()
 			self.__clearButton.grid_forget()
 		path=os.path.dirname(os.path.realpath(__file__))
-		#print(path)
 		path2=path+"/Icons/"
 		self.__iconlist=[]
 		for i in sorted(os.listdir(path2)):
@@ -437,7 +428,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		x=sympy.Symbol("x")
 		if "exp" in self.__equation:
 			boundlist=[]
-			print ("hit")
 			try:
 			    boundlist.append([sympy.nsolve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),(-h/2,h/2),solver="bisect")])
 			except:
@@ -461,9 +451,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		boundlist=sorted(boundlist)
 		self.drawGraph(boundlist,w,spl)
 	def drawGraph(self,boundlist,w,spl):
-		print ("hit2")
-		print (self.__equation)
-		print (boundlist)
 		self.__pen2.penup()
 		self.__pen2.speed(0)
 		if not spl:
@@ -473,7 +460,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		else:
 			if "-" in self.__equation.split(".exp(",1)[1]:
 				x1=boundlist[0]
-				print ("w is",w)
 				boundlist.append(w*self.__zfactor**(-1)/2)
 			else:
 				x1=-(w*self.__zfactor**(-1)/2)
@@ -481,7 +467,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		while x1<=x2:
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
 			self.__pen2.goto(self.__zfactor*x1,self.__zfactor*y)
-			print (self.__zfactor*x1,self.__zfactor*y)
 			self.__pen2.pendown()
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
@@ -529,7 +514,6 @@ class CreateEquation():
 		if self.__method=="Polynomial Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
-			#print (os.path.dirname(os.path.dirname(path1))+"/Regression Programs/")
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/quadratic_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
@@ -549,7 +533,6 @@ class CreateEquation():
 		if self.__method=="Linear Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
-			#print (os.path.dirname(os.path.dirname(path1))+"/Regression Programs/")
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/linear_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
@@ -560,7 +543,6 @@ class CreateEquation():
 		if self.__method=="B-Splines":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
-			#print (os.path.dirname(os.path.dirname(path1))+"/Regression Programs/")
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
