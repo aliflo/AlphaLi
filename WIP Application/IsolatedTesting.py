@@ -1,1 +1,1 @@
-print ("math.exp(-yeet)".split(".exp(",1)[1])
+print([eval(i) for i in ["1","-2","3"]])

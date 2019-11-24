@@ -15,3 +15,4 @@ finalcoef <- piecewisePoly$PiecePoly$coef
 finalcoef[1, ] <- finalcoef[1, ] + model$coefficients[1]
 finalcoef
 attr(bs(csvfile$months, df=7),"knots") 
+piecewisePoly$knots

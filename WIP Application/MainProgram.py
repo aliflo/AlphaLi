@@ -262,11 +262,12 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		nextbutton.grid()
 	def AnalysisMethodSelection2(self):
 		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
-		if isinstance(instance.getEquations(),list):
-			for i in instance.getEquations():
+		equ=instance.getEquations()
+		if isinstance(equ,list):
+			for i in equ[:(len(equ)-1)]:
 				self.dataButtonCallback(None,i,True)
 		else:
-			self.dataButtonCallback(None,instance.getEquations(),False)
+			self.dataButtonCallback(None,equ,False)
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
@@ -516,6 +517,7 @@ class CreateEquation():
 		self.__method=selectedmethod
 		equations=[]
 		path1=os.path.dirname(os.path.realpath(__file__))
+		self.__knots=""
 		if self.__method=="Exponential Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
@@ -563,7 +565,7 @@ class CreateEquation():
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
 			self.__equations=(re.split("\n",x))[3:8]
-
+			self.__equations.append([eval(z) for z in [j for k in [re.split(" ",i) for i in re.split("  ",(re.split("\n",x))[15])[1:]] for j in k] if z!=""])
 	def getEquations(self):
 		return self.__equations
 instance = Application(tkinter.Tk())
