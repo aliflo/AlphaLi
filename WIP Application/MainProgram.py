@@ -265,6 +265,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		equ=instance.getEquations()
 		if isinstance(equ,list):
 			for i in equ[:(len(equ)-1)]:
+				print (equ[len(equ)-1])
 				self.dataButtonCallback(None,i,True)
 		else:
 			self.dataButtonCallback(None,equ,False)
@@ -437,7 +438,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		x=sympy.Symbol("x")
 		if "exp" in self.__equation:
 			boundlist=[]
-			print ("hit")
 			try:
 			    boundlist.append([sympy.nsolve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),(-h/2,h/2),solver="bisect")])
 			except:
@@ -461,9 +461,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		boundlist=sorted(boundlist)
 		self.drawGraph(boundlist,w,spl)
 	def drawGraph(self,boundlist,w,spl):
-		print ("hit2")
-		print (self.__equation)
-		print (boundlist)
 		self.__pen2.penup()
 		self.__pen2.speed(0)
 		if not spl:
@@ -473,7 +470,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		else:
 			if "-" in self.__equation.split(".exp(",1)[1]:
 				x1=boundlist[0]
-				print ("w is",w)
 				boundlist.append(w*self.__zfactor**(-1)/2)
 			else:
 				x1=-(w*self.__zfactor**(-1)/2)
@@ -481,7 +477,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		while x1<=x2:
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
 			self.__pen2.goto(self.__zfactor*x1,self.__zfactor*y)
-			print (self.__zfactor*x1,self.__zfactor*y)
 			self.__pen2.pendown()
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
