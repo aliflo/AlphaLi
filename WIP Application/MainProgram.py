@@ -262,8 +262,11 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		nextbutton.grid()
 	def AnalysisMethodSelection2(self):
 		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
-		self.defineEquation(None,instance.getEquations())
-
+		if isinstance(instance.getEquations(),list):
+			for i in instance.getEquations():
+				self.dataButtonCallback(None,i,True)
+		else:
+			self.dataButtonCallback(None,instance.getEquations(),False)
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
@@ -273,8 +276,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equationEntry.grid(row=1,column=0, padx=5, pady=0, columnspan=2)
 		#self.__equationWindow.bind("<Return>", self.defineEquation(None, self.__equationEntry.get()))
 		#QOL change, enter sends the entry also instead of clicking button
-		self.__equationWindow.bind("<Return>",lambda event:self.defineEquation(None, self.__equationEntry.get(),h,w))
-		self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.defineEquation(None, self.__equationEntry.get(),h,w))
+		self.__equationWindow.bind("<Return>",lambda event:self.equationButtonCallback(None, self.__equationEntry.get()))
+		self.__equationEntered = tkinter.Button(self.__equationWindow,text="Enter", command=lambda:self.equationButtonCallback(None, self.__equationEntry.get()))
 		self.__equationEntered.grid(row=2,column=1, padx=5, pady=5)
 		self.__cancelEquation = tkinter.Button(self.__equationWindow,text="Cancel", command= lambda: self.__equationWindow.destroy())
 		self.__cancelEquation.grid(row=2,column=0, padx=5, pady=5)
@@ -400,16 +403,21 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__colourinwindow.destroy()
 		self.__canvasWindow.destroy()
 		self.canvasButtonCallback()
-	def defineEquation(self,event,equ):
-		h,w=self.__h,self.__w
+	def dataButtonCallback(self,event,equ,spl):
+		self.__dataMenu.destroy()
+		self.defineEquation(equ,spl)
+	def equationButtonCallback(self,event,equ):
 		self.__equationWindow.destroy()
+		self.defineEquation(equ,False)
+	def defineEquation(self,equ,spl):
+		h,w=self.__h,self.__w
 		self.__equation = equ
 		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #put exponentials in the right form
 		    if eqlist[i]=="e" and eqlist[i+1]=="^":
 		        for j in range (len(eqlist[(i+2):])):
-		            if eqlist[(i+2):][j].isdigit()==False and eqlist[(i+2):][j]!="x" and eqlist[(i+2):][j]!="/":
+		            if eqlist[(i+2):][j].isdigit()==False and eqlist[(i+2):][j]!="x" and eqlist[(i+2):][j]!="/" and eqlist[(i+2):][j]!="-" and eqlist[(i+2):][j]!=".":
 		                eqlist.insert((i+2+j),")")
 		                break
 		            elif (j+1)==len(eqlist[(i+2):]):
@@ -420,13 +428,25 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #Put multiplication in the right form
-		    if eqlist[i]=="x" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")") or (eqlist[i]=="m" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")")):
+		    if eqlist[i]=="x" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")") or (eqlist[i]=="m" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")"or eqlist[i-1]=="x")):
 			    eqlist.insert(i, "*")
 		self.__equation="".join(eqlist)
-		self.equationBounds(h,w)
-	def equationBounds(self,h,w):
+		self.equationBounds(h,w,spl)
+	def equationBounds(self,h,w,spl):
 		x=sympy.Symbol("x")
-		boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)]
+		if "exp" in self.__equation:
+			boundlist=[]
+			print ("hit")
+			try:
+			    boundlist.append([sympy.nsolve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),(-h/2,h/2),solver="bisect")])
+			except:
+			    pass
+			try:
+			    boundlist.append([sympy.nsolve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),(-h/2,h/2),solver="bisect")])
+			except:
+			    pass
+		else:
+			boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)]
 		for i in range(len(boundlist)):
 			newlist=[]
 			for j in range(len(boundlist[i])):
@@ -438,19 +458,29 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			if i==[]:
 				boundlist.remove(i)
 		boundlist=sorted(boundlist)
-		self.drawGraph(boundlist,w)
-	def drawGraph(self,boundlist,w):
+		self.drawGraph(boundlist,w,spl)
+	def drawGraph(self,boundlist,w,spl):
+		print ("hit2")
+		print (self.__equation)
+		print (boundlist)
 		self.__pen2.penup()
 		self.__pen2.speed(0)
-		self.__pen2.goto(0,0)
+		if not spl:
+			self.__pen2.goto(0,0)
 		if "exp" not in self.__equation:
 			x1=boundlist[0]
 		else:
-			x1=-(w/2)
+			if "-" in self.__equation.split(".exp(",1)[1]:
+				x1=boundlist[0]
+				print ("w is",w)
+				boundlist.append(w*self.__zfactor**(-1)/2)
+			else:
+				x1=-(w*self.__zfactor**(-1)/2)
 		x2=boundlist[len(boundlist)-1]
 		while x1<=x2:
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
 			self.__pen2.goto(self.__zfactor*x1,self.__zfactor*y)
+			print (self.__zfactor*x1,self.__zfactor*y)
 			self.__pen2.pendown()
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
@@ -493,7 +523,7 @@ class CreateEquation():
 			x=subprocess.check_output(cmd, universal_newlines=True)
 			a=((re.split("\n",x)[4]).strip()).split(" ",2)[0]
 			b=((re.split("\n",x)[4]).strip()).split(" ",2)[1]
-			print (a+"xe^"+b)
+			self.__equations=str(a+"e^"+b+"x")
 		if self.__method=="Polynomial Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
@@ -524,7 +554,7 @@ class CreateEquation():
 			#which is the output of the final line of rtesting.r (the linear regression coefficients). universal_newlines forces it to work with linux and windows line endings
 			intercept=((re.split("\n",x)[1]).strip()) #Isolates the numbers from the output
 			grad=((re.split("\n",x)[3]).strip())#And stores them in their related variables
-			self.__equations=str(grad),"x",str(intercept)
+			self.__equations=str(grad)+"x+"+str(intercept)
 		if self.__method=="B-Splines":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
@@ -532,7 +562,7 @@ class CreateEquation():
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
-			print(x)
+			self.__equations=(re.split("\n",x))[3:8]
 
 	def getEquations(self):
 		return self.__equations
