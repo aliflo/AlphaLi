@@ -257,6 +257,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		equ=instance.getEquations()
 		if isinstance(equ,list):
 			for i in equ[:(len(equ)-1)]:
+				print (equ[len(equ)-1])
 				self.dataButtonCallback(None,i,True)
 		else:
 			self.dataButtonCallback(None,equ,False)
