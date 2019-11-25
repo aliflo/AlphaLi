@@ -244,16 +244,17 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__csvEntry.destroy()
 		self.AnalysisMethodSelection()
 	def AnalysisMethodSelection(self):
-
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
-		self.__selectedMethod = tkinter.StringVar()
-		self.__selectedMethod.set("Select a method")
-		self.__methodsDropdown = tkinter.OptionMenu(self.__dataMenu,self.__selectedMethod,*methods)
-		nextbutton=tkinter.Button(self.__dataMenu,text="Analyse",command=self.AnalysisMethodSelection2)
-		self.__methodsDropdown.grid()
-		nextbutton.grid()
+		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
+		for i in range (len(methods)):
+			self.__methodsDropdown.insert(i+1,methods[i])
+		nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
+		nextbuttonTTP=CreateToolTip(nextbutton,"Analyse")
+		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
+		self.__methodsDropdown.grid(row=3,column=1,sticky="S",pady=10)
+		nextbutton.grid(row=4,column=1)
 	def AnalysisMethodSelection2(self):
-		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
+		instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
 		equ=instance.getEquations()
 		if isinstance(equ,list):
 			for i in equ[:(len(equ)-1)]:
@@ -317,6 +318,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__mosquitoIcon=ImageTk.PhotoImage(self.__iconlist[5])
 		self.__AIICon=ImageTk.PhotoImage(self.__iconlist[6])
 		self.__uploadIcon=ImageTk.PhotoImage(self.__iconlist[7])
+		self.__gearIcon=ImageTk.PhotoImage(self.__iconlist[8])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
 		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=62,height=62,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
