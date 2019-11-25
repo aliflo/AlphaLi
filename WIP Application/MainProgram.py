@@ -147,7 +147,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__dataMenu.grid()
 		#self.__dataMenu["bg"]=self.__coolblue
 		self.__dataMenuFrame = tkinter.Frame(self.__dataMenu,bg=self.__coolbluedark,height=250,width=160)
-		self.__WHOButton = tkinter.Button(self.__dataMenuFrame,image=self.__mosquitoIcon,command=self.WHOdata,height=64,width=64)
+		self.__WHOButton = tkinter.Button(self.__dataMenuFrame,image=self.__mosquitoIcon,state=tkinter.DISABLED,command=self.WHOdata,height=64,width=64,)
 		self.__AIButton=tkinter.Button(self.__dataMenuFrame,command=self.AIdata,image=self.__AIICon,height=64,width=64)
 		self.__UserDataButton=tkinter.Button(self.__dataMenuFrame,command=self.UserData,image=self.__uploadIcon,height=64,width=64)
 		
