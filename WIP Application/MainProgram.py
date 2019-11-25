@@ -181,7 +181,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		#split malaria data into a dictionary with country=key and list of cases for years 2011-2017 as item
 		self.__malariaDict={}
 		for k in self.__malariaData:
-			
 			self.__malariaDict[(k.split(","))[0]]=(k.split(","))[1:len(k)]
 		self.__WHOButton.destroy()
 		self.__AIButton.destroy()
@@ -190,7 +189,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__selectedCountry.set(listOfCountries[0])
 		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenuFrame,self.__selectedCountry,*listOfCountries)
 		self.__simpleLabel=tkinter.Label(self.__dataMenuFrame,text="Select a country:",bg=self.__coolbluedark)
+		self.__infoLabel=tkinter.Message(self.__dataMenuFrame,text="Note: For the Malaria data, the eight years of data is spread across 240 on the x axis for readability, and the population data is squashed to fit onto the scale.",bg=self.__coolblue)
 		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,text="Select",command=self.WHODataCallback1)
+		self.__infoLabel.grid(row=0,column=1)
 		self.__simpleLabel.grid(row=1,column=1)
 		self.__countriesDropdown.grid(row=2,column=1)
 		self.__nextbutton.grid(row=3,column=1)
@@ -208,8 +209,21 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		with open(filepath,mode="w",newline="") as datafile:
 			datafilewriter=csv.writer(datafile,delimiter=",",quotechar='"',quoting=csv.QUOTE_MINIMAL)
 			datafilewriter.writerow(["Year","Malaria cases in {0}".format(selectedCountry)])
+			maximum=0
+			for j in self.__malariaDict[selectedCountry]:
+				val=int(j)
+				if val>maximum:
+					maximum=val
+			minimum = maximum
+			for j in self.__malariaDict[selectedCountry]:
+				val=int(j)
+				if val<minimum:
+					minimum=val
+			print("Data range:",minimum,maximum)
+
 			for i in range(0,len(self.__malariaDict[selectedCountry])):
-				datafilewriter.writerow([i+1,(self.__malariaDict[selectedCountry])[i]])
+				val=int((self.__malariaDict[selectedCountry])[i])
+				datafilewriter.writerow([(len(self.__malariaDict[selectedCountry])-(i))*30,int(((240)/(maximum-minimum))*(val-minimum))])
 		self.__CSVfilePath = filepath
 		self.AnalysisMethodSelection()
 		
