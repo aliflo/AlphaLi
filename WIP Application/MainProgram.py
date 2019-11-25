@@ -189,7 +189,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__selectedCountry.set(listOfCountries[0])
 		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenuFrame,self.__selectedCountry,*listOfCountries)
 		self.__simpleLabel=tkinter.Label(self.__dataMenuFrame,text="Select a country:",bg=self.__coolbluedark)
-		self.__infoLabel=tkinter.Message(self.__dataMenuFrame,text="Note: For the Malaria data, the eight years of data is spread across 240 on the x axis for readability, and the population data is squashed to fit onto the scale.",bg=self.__coolblue)
+		self.__infoLabel=tkinter.Message(self.__dataMenuFrame,text="Note: For the Malaria data, the eight years of data is spread across 240 on the x axis for readability, and the population data is squashed to fit onto the scale.",justify="left", bg=self.__coolblue)
 		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,text="Select",command=self.WHODataCallback1)
 		self.__infoLabel.grid(row=0,column=1)
 		self.__simpleLabel.grid(row=1,column=1)
@@ -202,6 +202,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__countriesDropdown.destroy()
 		self.__simpleLabel.destroy()
 		self.__nextbutton.destroy()
+		self.__infoLabel.destroy()
 		#since this malaria data is a little different, we need to create the CSV file that will be sent to the analysis function
 		filepath=os.path.dirname(os.path.realpath(__file__))
 		csvfolderpath=(os.path.dirname(filepath)+"/CSV Data Files")
