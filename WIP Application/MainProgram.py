@@ -1,5 +1,5 @@
 import numpy as np
-import turtle,tkinter,math,os,webbrowser,subprocess,re,csv,tkinter.font,sympy
+import turtle,tkinter,math,os,webbrowser,subprocess,re,csv,tkinter.font,sympy,tkinter.filedialog
 from PIL import Image, ImageTk, ImageFilter
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
 #but the advantage of doing just import tkinter is that it's technically "cleaner" code as you don't risk possible 
@@ -226,23 +226,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.AnalysisMethodSelection()
 
 	def UserData(self):
-		self.__WHOButton.destroy()
-		self.__AIButton.destroy()
-		self.__UserDataButton.destroy()
-		self.__csvLabel = tkinter.Label(self.__dataMenu,text="Enter the exact file path of the CSV file you wish to use. Example:\nC:/Users/tom/OneDrive/Documents/SWCHS/A-Levels/EPQ/AlphaLi/CSV Data Files/AIData.csv",bg=self.__coolbluedark)
-		self.__csvEntryFilepath=tkinter.StringVar()
-		self.__csvEntryFilepath.set("Enter file path")
-		self.__csvEntry = tkinter.Entry(self.__dataMenuFrame,textvariable=self.__csvEntryFilepath,width=80,bg=self.__coolblue)
-		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,text="next",command=self.UserData1)
-		self.__csvLabel.grid(row=0)
-		self.__csvEntry.grid(row=3,column=1)
-		self.__nextbutton.grid(row=4,column=1)
-	def UserData1(self):
-		self.__CSVfilePath=self.__csvEntryFilepath.get()
-		self.__nextbutton.destroy()
-		self.__csvLabel.destroy()
-		self.__csvEntry.destroy()
-		self.AnalysisMethodSelection()
+		self.__CSVfilePath=tkinter.filedialog.askopenfilename(initialdir = "~/Documents",title = "Select CSV file",filetypes = [("CSV files","*.csv")])
+		if self.__CSVfilePath!=():
+			self.AnalysisMethodSelection()
 	def AnalysisMethodSelection(self):
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-splines"]
 		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
@@ -430,6 +416,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equation="".join(eqlist)
 		self.equationBounds(h,w,knots)
 	def equationBounds(self,h,w,knots):
+		print (self.__equation)
 		x=sympy.Symbol("x")
 		if "exp" in self.__equation:
 			boundlist=[]
@@ -442,6 +429,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			except:
 			    pass
 		else:
+			print ([sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)])
 			boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)]
 		for i in range(len(boundlist)):
 			newlist=[]
@@ -456,6 +444,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		boundlist=sorted(boundlist)
 		self.drawGraph(boundlist,w,knots)
 	def drawGraph(self,boundlist,w,knots):
+		self.__observed=[]
 		self.__pen2.penup()
 		self.__pen2.speed(0)
 		if knots==None:
@@ -480,9 +469,13 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
 			self.__pen2.goto(self.__zfactor*x1,self.__zfactor*y)
 			self.__pen2.pendown()
+			if knots==None:
+				self.__observed.append([x1,y])
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
 		self.__pen2.goto(self.__zfactor*x2,self.__zfactor*y)
+	def chiSquared(self):
+		pass
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
     create a tooltip for a given widget
