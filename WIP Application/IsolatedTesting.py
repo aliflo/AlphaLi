@@ -1,1 +1,1 @@
-print (eval("10e+3"))
+print ("hello world")

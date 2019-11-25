@@ -256,11 +256,14 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 	def AnalysisMethodSelection2(self):
 		instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
 		equ=instance.getEquations()
+		x=-1
 		if isinstance(equ,list):
 			for i in equ[:(len(equ)-1)]:
-				self.dataButtonCallback(None,i,True)
+				x+=1
+				print (equ[len(equ)-1][x:x+2])
+				self.dataButtonCallback(None,i,equ[len(equ)-1][x:x+2])
 		else:
-			self.dataButtonCallback(None,equ,False)
+			self.dataButtonCallback(None,equ,None)
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
@@ -402,10 +405,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.defineEquation(equ,spl)
 	def equationButtonCallback(self,event,equ):
 		self.__equationWindow.destroy()
-		self.defineEquation(equ,False)
+		self.defineEquation(equ,None)
 	def defineEquation(self,equ,spl):
 		h,w=self.__h,self.__w
-		self.__equation = equ
+		self.__equation=equ
 		self.__equation=self.__equation.replace(" ","")
 		eqlist=[char for char in self.__equation]
 		for i in range(len(eqlist)): #put exponentials in the right form
@@ -455,17 +458,24 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 	def drawGraph(self,boundlist,w,spl):
 		self.__pen2.penup()
 		self.__pen2.speed(0)
-		if not spl:
+		if spl==None:
 			self.__pen2.goto(0,0)
-		if "exp" not in self.__equation:
-			x1=boundlist[0]
 		else:
+			x1=spl[0]
+		if "exp" not in self.__equation and spl==None:
+			x1=boundlist[0]
+		elif "exp" in self.__equation:
+			pass
 			if "-" in self.__equation.split(".exp(",1)[1]:
 				x1=boundlist[0]
 				boundlist.append(w*self.__zfactor**(-1)/2)
 			else:
 				x1=-(w*self.__zfactor**(-1)/2)
-		x2=boundlist[len(boundlist)-1]
+		if len(spl)==2:
+			x2=spl[1]
+		else:
+			print (boundlist)
+			x2=boundlist[len(boundlist)-1]
 		while x1<=x2:
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
 			self.__pen2.goto(self.__zfactor*x1,self.__zfactor*y)
@@ -552,7 +562,6 @@ class CreateEquation():
 			for z in range(len(coeffs)):
 				templist=[]
 				for i in range (len(coeffs[z])):
-					print (coeffs[z][i])
 					if len(coeffs[z][i])!=0:
 						templist.append(coeffs[z][i])
 				coeffs[z]=templist
