@@ -248,10 +248,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
 		self.__selectedMethod = tkinter.StringVar()
 		self.__selectedMethod.set("Select a method")
-		self.__methodsDropdown = tkinter.OptionMenu(self.__dataMenu,self.__selectedMethod,*methods)
-		nextbutton=tkinter.Button(self.__dataMenu,text="Analyse",command=self.AnalysisMethodSelection2)
-		self.__methodsDropdown.grid()
-		nextbutton.grid()
+		self.__methodsDropdown = tkinter.OptionMenu(self.__dataMenuFrame,self.__selectedMethod,*methods)
+		nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
+		self.__methodsDropdown.grid(row=3,sticky="S")
+		nextbutton.grid(row=4)
 	def AnalysisMethodSelection2(self):
 		instance = CreateEquation(self.__CSVfilePath,self.__selectedMethod.get())
 		equ=instance.getEquations()
@@ -318,6 +318,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__mosquitoIcon=ImageTk.PhotoImage(self.__iconlist[5])
 		self.__AIICon=ImageTk.PhotoImage(self.__iconlist[6])
 		self.__uploadIcon=ImageTk.PhotoImage(self.__iconlist[7])
+		self.__gearIcon=ImageTk.PhotoImage(self.__iconlist[8])
 		self.__coolblue="#46ACC2"
 		self.__coolbluedark="#3b91a3"
 		self.__canvasButton = tkinter.Button(self.__root,image=self.__canvasIcon,width=62,height=62,command=self.canvasButtonCallback, highlightthickness=0, bd=0, bg=self.__coolblue, activebackground=self.__coolbluedark)#a button to change the colour of the turtle
@@ -547,6 +548,7 @@ class CreateEquation():
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
+			print(x)
 			self.__equations=(re.split("\n",x))[3:8]
 			self.__equations.append([eval(z) for z in [j for k in [re.split(" ",i) for i in re.split("  ",(re.split("\n",x))[15])[1:]] for j in k] if z!=""])
 	def getEquations(self):
