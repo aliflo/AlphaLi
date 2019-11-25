@@ -220,10 +220,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				if val<minimum:
 					minimum=val
 			print("Data range:",minimum,maximum)
-
+			print(self.__w,self.__h)
 			for i in range(0,len(self.__malariaDict[selectedCountry])):
 				val=int((self.__malariaDict[selectedCountry])[i])
-				datafilewriter.writerow([(len(self.__malariaDict[selectedCountry])-(i))*30,int(((240)/(maximum-minimum))*(val-minimum))])
+				datafilewriter.writerow([(len(self.__malariaDict[selectedCountry])-(i))*((self.__h/2)+25)/8,int((((self.__w/2)+25)/(maximum-minimum))*(val-minimum))])
 		self.__CSVfilePath = filepath
 		self.AnalysisMethodSelection()
 		
