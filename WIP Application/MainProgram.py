@@ -471,7 +471,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				boundlist.append(w*self.__zfactor**(-1)/2)
 			else:
 				x1=-(w*self.__zfactor**(-1)/2)
-		if len(spl)==2:
+		if spl!=None:
 			x2=spl[1]
 		else:
 			print (boundlist)
