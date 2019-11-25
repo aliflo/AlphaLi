@@ -1,1 +1,1 @@
-print([eval(i) for i in ["1","-2","3"]])
+print (eval("10e+3"))

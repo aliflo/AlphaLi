@@ -257,7 +257,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		equ=instance.getEquations()
 		if isinstance(equ,list):
 			for i in equ[:(len(equ)-1)]:
-				print (equ[len(equ)-1])
 				self.dataButtonCallback(None,i,True)
 		else:
 			self.dataButtonCallback(None,equ,False)
@@ -547,7 +546,17 @@ class CreateEquation():
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
-			self.__equations=(re.split("\n",x))[3:8]
+			coeffs=[k for k in [each[1:] for each in ([j for j in [re.split(" ",i) for i in (re.split("\n",x)[9:13])] if j!=" "])]]
+			for z in range(len(coeffs)):
+				templist=[]
+				for i in range (len(coeffs[z])):
+					print (coeffs[z][i])
+					if len(coeffs[z][i])!=0:
+						templist.append(coeffs[z][i])
+				coeffs[z]=templist
+			self.__equations=[]
+			for i in range (0,5):
+				self.__equations.append(coeffs[3][i]+"x^3+"+coeffs[2][i]+"x^2+"+coeffs[1][i]+"x+"+coeffs[0][i])
 			self.__equations.append([eval(z) for z in [j for k in [re.split(" ",i) for i in re.split("  ",(re.split("\n",x))[15])[1:]] for j in k] if z!=""])
 	def getEquations(self):
 		return self.__equations

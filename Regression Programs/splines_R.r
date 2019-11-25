@@ -13,6 +13,6 @@ piecewisePoly <- RegBsplineAsPiecePoly(model, "bs(csvfile$months, df = 7)",shift
 piecewisePoly
 finalcoef <- piecewisePoly$PiecePoly$coef
 finalcoef[1, ] <- finalcoef[1, ] + model$coefficients[1]
-piecewisePoly <- piecewisePoly + finalcoef
+finalcoef
 attr(bs(csvfile$months, df=7),"knots") 
 piecewisePoly$knots
