@@ -245,7 +245,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.AnalysisMethodSelection()
 	def AnalysisMethodSelection(self):
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
-		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=FLAT)
+		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
 		for i in range (len(methods)):
 			self.__methodsDropdown.insert(i+1,methods[i])
 		nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
