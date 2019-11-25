@@ -197,7 +197,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 	def WHODataCallback1(self):
 		selectedCountry=self.__selectedCountry.get()
 		selectedData=self.__malariaDict[selectedCountry]
-		#displayanalysismethods
+		#diknotsayanalysismethods
 		self.__countriesDropdown.destroy()
 		self.__simpleLabel.destroy()
 		self.__nextbutton.destroy()
@@ -244,7 +244,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__csvEntry.destroy()
 		self.AnalysisMethodSelection()
 	def AnalysisMethodSelection(self):
-		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-Splines"]
+		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-splines"]
 		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
 		for i in range (len(methods)):
 			self.__methodsDropdown.insert(i+1,methods[i])
@@ -400,13 +400,13 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__colourinwindow.destroy()
 		self.__canvasWindow.destroy()
 		self.canvasButtonCallback()
-	def dataButtonCallback(self,event,equ,spl):
+	def dataButtonCallback(self,event,equ,knots):
 		self.__dataMenu.destroy()
-		self.defineEquation(equ,spl)
+		self.defineEquation(equ,knots)
 	def equationButtonCallback(self,event,equ):
 		self.__equationWindow.destroy()
 		self.defineEquation(equ,None)
-	def defineEquation(self,equ,spl):
+	def defineEquation(self,equ,knots):
 		h,w=self.__h,self.__w
 		self.__equation=equ
 		self.__equation=self.__equation.replace(" ","")
@@ -428,8 +428,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		    if eqlist[i]=="x" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")") or (eqlist[i]=="m" and i!=0 and (eqlist[i-1].isdigit()or eqlist[i-1]==")"or eqlist[i-1]=="x")):
 			    eqlist.insert(i, "*")
 		self.__equation="".join(eqlist)
-		self.equationBounds(h,w,spl)
-	def equationBounds(self,h,w,spl):
+		self.equationBounds(h,w,knots)
+	def equationBounds(self,h,w,knots):
 		x=sympy.Symbol("x")
 		if "exp" in self.__equation:
 			boundlist=[]
@@ -454,15 +454,15 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			if i==[]:
 				boundlist.remove(i)
 		boundlist=sorted(boundlist)
-		self.drawGraph(boundlist,w,spl)
-	def drawGraph(self,boundlist,w,spl):
+		self.drawGraph(boundlist,w,knots)
+	def drawGraph(self,boundlist,w,knots):
 		self.__pen2.penup()
 		self.__pen2.speed(0)
-		if spl==None:
+		if knots==None:
 			self.__pen2.goto(0,0)
 		else:
-			x1=spl[0]
-		if "exp" not in self.__equation and spl==None:
+			x1=knots[0]
+		if "exp" not in self.__equation and knots==None:
 			x1=boundlist[0]
 		elif "exp" in self.__equation:
 			pass
@@ -471,8 +471,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				boundlist.append(w*self.__zfactor**(-1)/2)
 			else:
 				x1=-(w*self.__zfactor**(-1)/2)
-		if spl!=None:
-			x2=spl[1]
+		if knots!=None:
+			x2=knots[1]
 		else:
 			print (boundlist)
 			x2=boundlist[len(boundlist)-1]
@@ -552,7 +552,7 @@ class CreateEquation():
 			intercept=((re.split("\n",x)[1]).strip()) #Isolates the numbers from the output
 			grad=((re.split("\n",x)[3]).strip())#And stores them in their related variables
 			self.__equations=str(grad)+"x+"+str(intercept)
-		if self.__method=="B-Splines":
+		if self.__method=="B-splines":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
