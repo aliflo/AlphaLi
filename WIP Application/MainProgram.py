@@ -260,8 +260,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		nextbutton.grid(row=4,column=1)
 		self.__chiSquaredCheckbox.grid(row=0,column=1)
 	def AnalysisMethodSelection2(self):
-		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()))
-		if self.__chiSquaredVar.get()==1:
+		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()),int(self.__chiSquaredVar.get().strip(" ")))
+
+		if self.__chiSquaredVar.get():
+			print("hit")
 			self.chiSquared()
 		instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
 		equ=instance.getEquations()
