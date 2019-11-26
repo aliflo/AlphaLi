@@ -153,7 +153,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		
 		self.__dataMenuFrame.grid(row=0,column=0,sticky="EW")
 		self.__dataMenuFrame.grid_columnconfigure(0, weight=1)
-		self.__dataMenuFrame.grid_columnconfigure(2, weight=1)
+		self.__dataMenuFrame.grid_columnconfigure(3, weight=1)
 		self.__dataMenuFrame.grid_rowconfigure(1,weight=1)
 		self.__dataMenuFrame.grid_rowconfigure(3,weight=1)
 		
@@ -261,10 +261,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		nextbuttonTTP=CreateToolTip(self.__nextbutton,"Analyse")
 		self.__backbutton=tkinter.Button(self.__dataMenuFrame, text="Back",command=self.backCallback)
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
-		self.__methodsDropdown.grid(row=3,column=1,sticky="S",pady=10)
-		self.__nextbutton.grid(row=4,column=1)
-		self.__backbutton.grid(row=4,column=0)
-		self.__chiSquaredCheckbox.grid(row=0,column=1)
+		self.__methodsDropdown.grid(row=3,column=1, columnspan=2,sticky="S",pady=10)
+		self.__nextbutton.grid(row=4,column=2)
+		self.__backbutton.grid(row=4,column=1)
+		self.__chiSquaredCheckbox.grid(row=0,column=1,columnspan=2)
 	def AnalysisMethodSelection2(self):
 		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()),int(self.__chiSquaredVar.get().strip(" ")))
 		if self.__chiSquaredVar.get():
