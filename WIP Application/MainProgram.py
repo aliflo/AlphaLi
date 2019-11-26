@@ -262,8 +262,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__backbutton=tkinter.Button(self.__dataMenuFrame, text="Back",command=self.backCallback)
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
 		self.__methodsDropdown.grid(row=3,column=1, columnspan=2,sticky="S",pady=10)
-		self.__nextbutton.grid(row=4,column=2)
-		self.__backbutton.grid(row=4,column=1)
+		self.__nextbutton.grid(row=4,column=2,sticky="W")
+		self.__backbutton.grid(row=4,column=1,sticky="W")
 		self.__chiSquaredCheckbox.grid(row=0,column=1,columnspan=2)
 	def AnalysisMethodSelection2(self):
 		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()),int(self.__chiSquaredVar.get().strip(" ")))
