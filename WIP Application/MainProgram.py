@@ -261,10 +261,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__chiSquaredCheckbox.grid(row=0,column=1)
 	def AnalysisMethodSelection2(self):
 		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()),int(self.__chiSquaredVar.get().strip(" ")))
-
 		if self.__chiSquaredVar.get():
 			print("hit")
 			self.chiSquared()
+			print("hit2")
 		instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
 		equ=instance.getEquations()
 		x=-1
@@ -275,8 +275,9 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				self.dataButtonCallback(None,i,equ[len(equ)-1][x:x+2])
 		else:
 			self.dataButtonCallback(None,equ,None)
+
 	def chiSquared(self):
-		print("trace")
+		print("performing chi-squared test")
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
@@ -501,8 +502,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			x1=x1+1
 		y=eval(self.__equation.replace("x","("+str(x2)+")").replace("e"+"("+str(x2)+")"+"p","exp").replace("sympy","math"))
 		self.__pen2.goto(self.__zfactor*x2,self.__zfactor*y)
-	def chiSquared(self):
-		pass
 class CreateToolTip(object): #(vegaseat, 2015) see bibliography
     '''
     create a tooltip for a given widget
