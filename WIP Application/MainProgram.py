@@ -146,7 +146,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__dataMenu.title("Data Menu")
 		self.__dataMenu.grid()
 		#self.__dataMenu["bg"]=self.__coolblue
-		self.__dataMenuFrame = tkinter.Frame(self.__dataMenu,bg=self.__coolbluedark,height=250,width=160)
+		self.__dataMenuFrame = tkinter.Frame(self.__dataMenu,bg=self.__coolbluedark,height=280,width=160)
 		self.__WHOButton = tkinter.Button(self.__dataMenuFrame,image=self.__mosquitoIcon,command=self.WHOdata,height=64,width=64,)
 		self.__AIButton=tkinter.Button(self.__dataMenuFrame,command=self.AIdata,image=self.__AIICon,height=64,width=64)
 		self.__UserDataButton=tkinter.Button(self.__dataMenuFrame,command=self.UserData,image=self.__uploadIcon,height=64,width=64)
@@ -254,17 +254,24 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
 		for i in range (len(methods)):
 			self.__methodsDropdown.insert(i+1,methods[i])
-		self.__chiSquaredVar = tkinter.StringVar()
+		self.__chiSquaredVar = tkinter.IntVar()
 		self.__chiSquaredVar.set(0)
 		self.__chiSquaredCheckbox = tkinter.Checkbutton(self.__dataMenuFrame,bg=self.__coolbluedark,text="Chi-Squared test?",variable=self.__chiSquaredVar)		
+		self.__drawDataVar = tkinter.IntVar()
+		self.__drawDataVar.set(0)
+		self.__drawDataCheckbox = tkinter.Checkbutton(self.__dataMenuFrame,bg=self.__coolbluedark,text="Plot dataset?",variable=self.__drawDataVar)
 		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
 		nextbuttonTTP=CreateToolTip(self.__nextbutton,"Analyse")
 		self.__backbutton=tkinter.Button(self.__dataMenuFrame, text="Back",command=self.backCallback)
+
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
+		self.__dataMenuFrame.grid_rowconfigure(1,weight=2)
+		self.__chiSquaredCheckbox.grid(row=0,column=1,columnspan=2)
+		self.__drawDataCheckbox.grid(row=1,column=1,columnspan=2)
 		self.__methodsDropdown.grid(row=3,column=1, columnspan=2,sticky="S",pady=10)
 		self.__nextbutton.grid(row=4,column=2,sticky="W")
 		self.__backbutton.grid(row=4,column=1,sticky="W")
-		self.__chiSquaredCheckbox.grid(row=0,column=1,columnspan=2)
+
 	def AnalysisMethodSelection2(self):
 		try:
 			instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
@@ -281,33 +288,62 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				self.dataButtonCallback(None,i,equ[len(equ)-1][x:x+2])
 		else:
 			self.dataButtonCallback(None,equ,None)
+		if self.__drawDataVar.get():
+			self.drawData()
 		if self.__chiSquaredVar.get():
 			self.chiSquared(equ,method)
-
-	def chiSquared(self,equations,method):
-		print("performing chi-squared test",equations,method)
-		##plot values
+		
+	def drawData(self):
 		data=self.getData()
-		pointPen=turtle.RawTurtle(self.__canvas)
-		pointPen.penup()
-		pointPen.speed(0)
-		#pointPen.hideturtle()
-		pointPen.color("blue")
-		pointPen.shape("circle")
-		pointPen.color("red")
-		pointPen.shapesize(0.08,0.08,0.08)
-		pointPen.width(5)
-		chiSquared=0
+		self.pointPen=turtle.RawTurtle(self.__canvas)
+		self.pointPen.penup()
+		self.pointPen.speed(0)
+		#self.pointPen.hideturtle()
+		self.pointPen.color("blue")
+		self.pointPen.shape("circle")
+		self.pointPen.color("red")
+		self.pointPen.shapesize(0.08,0.08,0.08)
+		self.pointPen.width(5)
 		for item in data:
-			pointPen.goto(item,data[item])
-			pointPen.color("red")
-			pointPen.pd()
-			pointPen.begin_fill()
-			pointPen.stamp()
-			pointPen.pu()
-			y=eval(self.__equation.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+			self.pointPen.goto(item,data[item])
+			self.pointPen.color("red")
+			self.pointPen.pd()
+			self.pointPen.begin_fill()
+			self.pointPen.stamp()
+			self.pointPen.pu()
+	def chiSquared(self,equations,method):
+		print("performing chi-squared test on ",equations,method)
+		data=self.getData()
+		chiSquared=0
+		if method == "B-splines":
+			knots = equations[len(equations)-1]
+		
+		for item in data:
+			if method=="B-splines":
+				print(data[item],type(data[item]))
+				if data[item]>knots[0]:
+					print("ye")
+				print(knots[0],type(knots[0]))
+				print(knots[1],type(knots[1]))
+				print(knots[2],type(knots[2]))
+				print(knots[3],type(knots[3]))
+				print(knots[4],type(knots[4]))
+				if knots[0]<item<knots[1]:
+					y=eval(self.__equation[0].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif knots[1]<item<knots[2]:
+					y=eval(self.__equation[1].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif knots[2]<item<knots[3]:
+					y=eval(self.__equation[2].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif knots[3]<item<knots[4]:
+					y=eval(self.__equation[3].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif knots[4]<item<knots[5]:
+					y=eval(self.__equation[4].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+			else:
+				y=eval(self.__equation.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
+
+
 		print(chiSquared)
 
 
@@ -354,6 +390,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__pen2.clear()
 		self.__pen2.penup()
 		self.__pen2.goto(0,0)
+		try:
+			self.pointPen.clear()
+		except:
+			pass
 	def buttons(self,h,w,init):
 		self.__zfactor=1
 		if init==False:
