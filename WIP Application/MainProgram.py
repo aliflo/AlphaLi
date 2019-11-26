@@ -210,7 +210,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		filepath=csvfolderpath+"/temporary.csv"
 		with open(filepath,mode="w",newline="") as datafile:
 			datafilewriter=csv.writer(datafile,delimiter=",",quotechar='"',quoting=csv.QUOTE_MINIMAL)
-			datafilewriter.writerow(["Year","{0}Number of malaria cases scaled to fit range of screen".format(selectedCountry)])
+			datafilewriter.writerow(["Year","[{0}] Number of malaria cases scaled to fit range of screen".format(selectedCountry)])
 			maximum=0
 			for j in self.__malariaDict[selectedCountry]:
 				val=int(j)
@@ -225,7 +225,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			print(self.__w,self.__h)
 			for i in range(0,len(self.__malariaDict[selectedCountry])):
 				val=int((self.__malariaDict[selectedCountry])[i])
-				datafilewriter.writerow([(len(self.__malariaDict[selectedCountry])-(i))*((self.__h/2)+25)/8,int((((self.__w/2)+25)/(maximum-minimum))*(val-minimum))])
+				datafilewriter.writerow([(len(self.__malariaDict[selectedCountry])-(i))*((self.__h/2)+25)/8,int(((((self.__w)/2)+25)/(maximum-minimum))*(val-minimum))])
 		self.__CSVfilePath = filepath
 		self.AnalysisMethodSelection()
 		
@@ -266,27 +266,63 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__backbutton.grid(row=4,column=1,sticky="W")
 		self.__chiSquaredCheckbox.grid(row=0,column=1,columnspan=2)
 	def AnalysisMethodSelection2(self):
-		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()),int(self.__chiSquaredVar.get().strip(" ")))
-		if self.__chiSquaredVar.get():
-			print("hit")
-			self.chiSquared()
 		try:
 			instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
 		except:
 			tkinter.messagebox.showerror("Error","No method selected")
 			self.AnalysisMethodSelection()
 		equ=instance.getEquations()
+		method=instance.method
 		x=-1
 		if isinstance(equ,list):
 			for i in equ[:(len(equ)-1)]:
 				x+=1
-				print (equ[len(equ)-1][x:x+2])
+				#print (equ[len(equ)-1][x:x+2])
 				self.dataButtonCallback(None,i,equ[len(equ)-1][x:x+2])
 		else:
 			self.dataButtonCallback(None,equ,None)
+		if self.__chiSquaredVar.get():
+			self.chiSquared(equ,method)
 
-	def chiSquared(self):
-		print("performing chi-squared test")
+	def chiSquared(self,equations,method):
+		print("performing chi-squared test",equations,method)
+		##plot values
+		data=self.getData()
+		pointPen=turtle.RawTurtle(self.__canvas)
+		pointPen.penup()
+		pointPen.speed(0)
+		#pointPen.hideturtle()
+		pointPen.color("blue")
+		pointPen.shape("circle")
+		pointPen.color("red")
+		pointPen.shapesize(0.08,0.08,0.08)
+		pointPen.width(5)
+		chiSquared=0
+		for item in data:
+			pointPen.goto(item,data[item])
+			pointPen.color("red")
+			pointPen.pd()
+			pointPen.begin_fill()
+			pointPen.stamp()
+			pointPen.pu()
+			y=eval(self.__equation.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+			tempVal=((data[item]-y)**2)/y
+			chiSquared+=tempVal
+		print(chiSquared)
+
+
+	def getData(self):
+		data={}
+		with open(self.__CSVfilePath) as datafile:
+			reader=csv.reader(datafile)
+			first=True
+			for row in reader:
+				if first!=True:
+					data[int(float(row[0]))]=int(float(row[1]))
+				first=False
+		return data
+				
+
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
@@ -453,7 +489,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__equation="".join(eqlist)
 		self.equationBounds(h,w,knots)
 	def equationBounds(self,h,w,knots):
-		print (self.__equation)
+		#print (self.__equation)
 		x=sympy.Symbol("x")
 		if "exp" in self.__equation:
 			boundlist=[]
@@ -466,7 +502,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			except:
 			    pass
 		else:
-			print ([sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)])
+			#print ([sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)])
 			boundlist=[sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))-((self.__zfactor**(-1))*(h/2+25)),x),sympy.solvers.solve(eval(self.__equation.replace("math.exp","sympy.exp"))+((self.__zfactor**(-1))*(h/2+25)),x)]
 		for i in range(len(boundlist)):
 			newlist=[]
@@ -500,7 +536,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		if knots!=None:
 			x2=knots[1]
 		else:
-			print (boundlist)
+			#print (boundlist)
 			x2=boundlist[len(boundlist)-1]
 		while x1<=x2:
 			y=eval(self.__equation.replace("x","("+str(x1)+")").replace("e"+"("+str(x1)+")"+"p","exp").replace("sympy","math"))
@@ -539,11 +575,11 @@ class CreateToolTip(object): #(vegaseat, 2015) see bibliography
             self.tw.destroy()
 class CreateEquation():
 	def __init__(self,datafilepath,selectedmethod):
-		self.__method=selectedmethod
+		self.method=selectedmethod
 		equations=[]
 		path1=os.path.dirname(os.path.realpath(__file__))
 		self.__knots=""
-		if self.__method=="Exponential Regression":
+		if self.method=="Exponential Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/exponential_R.r",str(csvin),path1]
@@ -551,7 +587,7 @@ class CreateEquation():
 			a=((re.split("\n",x)[4]).strip()).split(" ",2)[0]
 			b=((re.split("\n",x)[4]).strip()).split(" ",2)[1]
 			self.__equations=str(a+"e^"+b+"x")
-		if self.__method=="Polynomial Regression":
+		if self.method=="Polynomial Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/quadratic_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
@@ -570,18 +606,18 @@ class CreateEquation():
 			        else:
 			            xcoefficient=float(value)
 			self.__equations="".join([str(xsquaredcoefficient),"x^2+",str(xcoefficient),"x+",str(intercept)])
-		if self.__method=="Linear Regression":
+		if self.method=="Linear Regression":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/linear_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
 			#which is the output of the final line of rtesting.r (the linear regression coefficients). universal_newlines forces it to work with linux and windows line endings
-			print(x)
+			#print(x)
 			intercept=((re.split("\n",x)[1]).strip()) #Isolates the numbers from the output
 			grad=((re.split("\n",x)[3]).strip())#And stores them in their related variables 
 			self.__equations=str(grad)+"x+"+str(intercept)
-		if self.__method=="B-splines":
+		if self.method=="B-splines":
 			csvin=os.path.basename(datafilepath)
 			path1=os.path.dirname(datafilepath)+"/"
 			cmd=["Rscript",os.path.dirname(os.path.dirname(path1))+"/Regression Programs/splines_R.r",str(csvin),path1] #makes a command to launch the r program, passes the user's path and the input
