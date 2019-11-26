@@ -1,9 +1,9 @@
-Year,Malaria cases in Global
-275,53
-240.625,27
-206.25,0
-171.875,32
-137.5,75
-103.125,137
-68.75,166
-34.375,275
+Year,DREP CongoNumber of malaria cases scaled to fit range of screen
+275.0,275
+240.625,218
+206.25,188
+171.875,75
+137.5,20
+103.125,0
+68.75,25
+34.375,141
