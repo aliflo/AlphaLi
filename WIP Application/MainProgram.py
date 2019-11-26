@@ -255,15 +255,20 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		for i in range (len(methods)):
 			self.__methodsDropdown.insert(i+1,methods[i])
 		self.__chiSquaredVar = tkinter.StringVar()
-		self.__chiSquaredCheckbox = tkinter.Checkbutton(self.__dataMenuFrame,bg="red")
-		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
+		self.__chiSquaredVar.set(0)
+		self.__chiSquaredCheckbox = tkinter.Checkbutton(self.__dataMenuFrame,bg=self.__coolbluedark,text="Chi-Squared test?",variable=self.__chiSquaredVar)		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
 		nextbuttonTTP=CreateToolTip(self.__nextbutton,"Analyse")
 		self.__backbutton=tkinter.Button(self.__dataMenuFrame, text="Back",command=self.backCallback)
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
 		self.__methodsDropdown.grid(row=3,column=1,sticky="S",pady=10)
 		self.__nextbutton.grid(row=4,column=1)
 		self.__backbutton.grid(row=4,column=0)
+		self.__chiSquaredCheckbox.grid(row=0,column=1)
 	def AnalysisMethodSelection2(self):
+		print("banana",self.__chiSquaredVar.get(),type(self.__chiSquaredVar.get()),int(self.__chiSquaredVar.get().strip(" ")))
+		if self.__chiSquaredVar.get():
+			print("hit")
+			self.chiSquared()
 		try:
 			instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
 		except:
@@ -278,6 +283,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				self.dataButtonCallback(None,i,equ[len(equ)-1][x:x+2])
 		else:
 			self.dataButtonCallback(None,equ,None)
+	def chiSquared(self):
+		print("trace")
 	def userEnterValues(self,h,w):
 		self.__equationWindow=tkinter.Toplevel()
 		self.__equationWindow.title("Enter an equation")
