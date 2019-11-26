@@ -188,6 +188,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__selectedCountry=tkinter.StringVar(self.__dataMenu)
 		self.__selectedCountry.set(listOfCountries[0])
 		self.__countriesDropdown = tkinter.OptionMenu(self.__dataMenuFrame,self.__selectedCountry,*listOfCountries)
+		self.__countriesDropdown["highlightthickness"]=0
 		self.__simpleLabel=tkinter.Label(self.__dataMenuFrame,text="Select a country:",bg=self.__coolbluedark)
 		self.__infoLabel=tkinter.Message(self.__dataMenuFrame,text="Note: For the Malaria data, the eight years of data is spread across 240 on the x axis for readability, and the population data is squashed to fit onto the scale.",justify="left", bg=self.__coolblue)
 		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,text="Select",command=self.WHODataCallback1)
@@ -209,7 +210,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		filepath=csvfolderpath+"/temporary.csv"
 		with open(filepath,mode="w",newline="") as datafile:
 			datafilewriter=csv.writer(datafile,delimiter=",",quotechar='"',quoting=csv.QUOTE_MINIMAL)
-			datafilewriter.writerow(["Year","Malaria cases in {0}".format(selectedCountry)])
+			datafilewriter.writerow(["Year","{0}Number of malaria cases scaled to fit range of screen".format(selectedCountry)])
 			maximum=0
 			for j in self.__malariaDict[selectedCountry]:
 				val=int(j)
@@ -249,6 +250,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
 		for i in range (len(methods)):
 			self.__methodsDropdown.insert(i+1,methods[i])
+		self.__chiSquaredVar = tkinter.StringVar()
+		self.__chiSquaredCheckbox = tkinter.Checkbutton(self.__dataMenuFrame,bg="red")
 		nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
 		nextbuttonTTP=CreateToolTip(nextbutton,"Analyse")
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
@@ -557,6 +560,7 @@ class CreateEquation():
 			#lil batch script run from python
 			x=subprocess.check_output(cmd, universal_newlines=True) #Sets x to the output of the command
 			#which is the output of the final line of rtesting.r (the linear regression coefficients). universal_newlines forces it to work with linux and windows line endings
+			print(x)
 			intercept=((re.split("\n",x)[1]).strip()) #Isolates the numbers from the output
 			grad=((re.split("\n",x)[3]).strip())#And stores them in their related variables 
 			self.__equations=str(grad)+"x+"+str(intercept)
@@ -579,4 +583,5 @@ class CreateEquation():
 			self.__equations.append([eval(z) for z in [j for k in [re.split(" ",i) for i in re.split("  ",(re.split("\n",x))[15])[1:]] for j in k] if z!=""])
 	def getEquations(self):
 		return self.__equations
+
 instance = Application(tkinter.Tk())
