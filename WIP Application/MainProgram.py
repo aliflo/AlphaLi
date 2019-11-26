@@ -243,8 +243,12 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 
 	def UserData(self):
 		self.__CSVfilePath=tkinter.filedialog.askopenfilename(initialdir = "~/Documents",title = "Select CSV file",filetypes = [("CSV files","*.csv")])
+		print (self.__CSVfilePath)
 		if self.__CSVfilePath!=():
 			self.AnalysisMethodSelection()
+	def backCallback(self):
+		self.__dataMenu.destroy()
+		self.dataMenu()
 	def AnalysisMethodSelection(self):
 		methods=["Linear Regression","Polynomial Regression","Exponential Regression","B-splines"]
 		self.__methodsDropdown = tkinter.Listbox(self.__dataMenuFrame,bg="light grey",relief=tkinter.FLAT,highlightbackground=self.__coolblue)
@@ -252,13 +256,19 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.__methodsDropdown.insert(i+1,methods[i])
 		self.__chiSquaredVar = tkinter.StringVar()
 		self.__chiSquaredCheckbox = tkinter.Checkbutton(self.__dataMenuFrame,bg="red")
-		nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
-		nextbuttonTTP=CreateToolTip(nextbutton,"Analyse")
+		self.__nextbutton=tkinter.Button(self.__dataMenuFrame,image=self.__gearIcon,command=self.AnalysisMethodSelection2)
+		nextbuttonTTP=CreateToolTip(self.__nextbutton,"Analyse")
+		self.__backbutton=tkinter.Button(self.__dataMenuFrame, text="Back",command=self.backCallback)
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
 		self.__methodsDropdown.grid(row=3,column=1,sticky="S",pady=10)
-		nextbutton.grid(row=4,column=1)
+		self.__nextbutton.grid(row=4,column=1)
+		self.__backbutton.grid(row=4,column=0)
 	def AnalysisMethodSelection2(self):
-		instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
+		try:
+			instance = CreateEquation(self.__CSVfilePath,self.__methodsDropdown.get(self.__methodsDropdown.curselection()))
+		except:
+			tkinter.messagebox.showerror("Error","No method selected")
+			self.AnalysisMethodSelection()
 		equ=instance.getEquations()
 		x=-1
 		if isinstance(equ,list):
