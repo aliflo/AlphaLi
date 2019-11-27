@@ -324,6 +324,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			knots = equations[len(equations)-1]
 		for item in data:
 			if method=="B-splines":
+				print (item)
 				if item<knots[1]:
 					y=eval((equations[0]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[2]:
@@ -334,7 +335,10 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 					y=eval((equations[3]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[5]:
 					y=eval((equations[4]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				else:
+					y=item
 			else:
+				print ("hit")
 				y=eval(equations.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
