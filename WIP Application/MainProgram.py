@@ -311,7 +311,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.pointPen.shapesize(0.08,0.08,0.08)
 		self.pointPen.width(5)
 		for item in data:
-			self.pointPen.goto(item,data[item])
+			self.pointPen.goto(item*self.__zfactor,data[item]*self.__zfactor)
 			self.pointPen.color("red")
 			self.pointPen.pd()
 			self.pointPen.begin_fill()
@@ -324,7 +324,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			knots = equations[len(equations)-1]
 		for item in data:
 			if method=="B-splines":
-				print (item)
 				if item<knots[1]:
 					y=eval((equations[0]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[2]:
@@ -338,7 +337,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				else:
 					y=item
 			else:
-				print ("hit")
 				y=eval(equations.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
