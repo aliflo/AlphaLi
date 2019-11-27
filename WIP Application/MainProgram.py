@@ -267,7 +267,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.__dataMenuFrame.grid_columnconfigure(1,weight=2)
 		self.__dataMenuFrame.grid_rowconfigure(1,weight=2)
 		self.__chiSquaredCheckbox.grid(row=0,column=1,columnspan=2)
-		self.__drawDataCheckbox.grid(row=1,column=1,columnspan=2)
+		self.__drawDataCheckbox.grid(row=2,column=1,columnspan=2)
 		self.__methodsDropdown.grid(row=3,column=1, columnspan=2,sticky="S",pady=10)
 		self.__nextbutton.grid(row=4,column=2,sticky="W")
 		self.__backbutton.grid(row=4,column=1,sticky="W")
@@ -279,6 +279,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			tkinter.messagebox.showerror("Error","No method selected")
 			self.AnalysisMethodSelection()
 		equ=instance.getEquations()
+		eqlist=[]
 		method=instance.method
 		x=-1
 		if isinstance(equ,list):
@@ -286,12 +287,17 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 				x+=1
 				#print (equ[len(equ)-1][x:x+2])
 				self.dataButtonCallback(None,i,equ[len(equ)-1][x:x+2])
+				eqlist.append(self.getEquationForChi())
 		else:
 			self.dataButtonCallback(None,equ,None)
 		if self.__drawDataVar.get():
 			self.drawData()
 		if self.__chiSquaredVar.get():
-			self.chiSquared(equ,method)
+			if len(eqlist)>0:
+				eqlist.append(equ[(len(equ)-1)])
+				self.chiSquared(eqlist,method)
+			else:
+				self.chiSquared(self.getEquationForChi(),method)
 		
 	def drawData(self):
 		data=self.getData()
@@ -316,21 +322,24 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		chiSquared=0
 		if method == "B-splines":
 			knots = equations[len(equations)-1]
+			print ("--------------")
+			print (knots)
+			print ("--------------")
 		
 		for item in data:
 			if method=="B-splines":
 				if item<knots[1]:
-					y=eval((self.__equation[0]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+					y=eval((equations[0]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[2]:
-					y=eval((self.__equation[1]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+					y=eval((equations[1]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[3]:
-					y=eval((self.__equation[2]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+					y=eval((equations[2]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[4]:
-					y=eval((self.__equation[3]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+					y=eval((equations[3]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				elif item<knots[5]:
-					y=eval((self.__equation[4]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+					y=eval((equations[4]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			else:
-				y=eval(self.__equation.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				y=eval(equations.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
 
@@ -522,6 +531,8 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			    eqlist.insert(i, "*")
 		self.__equation="".join(eqlist)
 		self.equationBounds(h,w,knots)
+	def getEquationForChi(self):
+		return self.__equation
 	def equationBounds(self,h,w,knots):
 		#print (self.__equation)
 		x=sympy.Symbol("x")
