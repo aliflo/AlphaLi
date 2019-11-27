@@ -1,5 +1,5 @@
 import numpy as np
-import turtle,tkinter,math,os,webbrowser,subprocess,re,csv,tkinter.font,sympy,tkinter.filedialog
+import turtle,tkinter,math,os,webbrowser,subprocess,re,csv,tkinter.font,sympy,tkinter.filedialog, pyperclip
 from PIL import Image, ImageTk, ImageFilter
 class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Frame if I had done "from tkinter import *",
 #but the advantage of doing just import tkinter is that it's technically "cleaner" code as you don't risk possible 
@@ -322,10 +322,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		chiSquared=0
 		if method == "B-splines":
 			knots = equations[len(equations)-1]
-			print ("--------------")
-			print (knots)
-			print ("--------------")
-		
 		for item in data:
 			if method=="B-splines":
 				if item<knots[1]:
@@ -343,12 +339,27 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
 
-
-		print("""Chi-Squared Test Results
-			Chi-Squared Value: {0}
-			Fitted Equation Type: {1}
-			Equation(s) tested against: {2}""".format(chiSquared,method,equations))
-
+		self.__chiSquaredWindow=tkinter.Toplevel()
+		self.__chiSquaredWindow.title("Test Results")
+		headerFont=tkinter.font.Font(family='Helvetica', size=12, weight="bold")
+		bodyFont=tkinter.font.Font(family="Helvetica",size=11)
+		self.__chiLabel=tkinter.Label(self.__chiSquaredWindow,text="Chi-squared value:",font=headerFont).grid(row=0,column=0,columnspan=2,sticky="NW")
+		self.__chiValueLabel=tkinter.Label(self.__chiSquaredWindow,text=str(chiSquared),font=bodyFont).grid(row=1,column=0,columnspan=2,sticky="NW")
+		self.__methodLabel=tkinter.Label(self.__chiSquaredWindow,text="Fitted equation type:",font=headerFont).grid(row=3,column=0,columnspan=2,sticky="NW")
+		self.__methodValueLabel=tkinter.Label(self.__chiSquaredWindow,text=str(method),font=bodyFont).grid(row=4,column=0,columnspan=2,sticky="NW")
+		self.__equationsLabel=tkinter.Label(self.__chiSquaredWindow,text="Equation(s) tested against:",font=headerFont).grid(row=5,column=0,columnspan=2,sticky="NW")
+		self.__continueButton=tkinter.Button(self.__chiSquaredWindow,text="Continue",command=lambda: self.__chiSquaredWindow.destroy())
+		rawtext=("Chi-Squared Test Results Chi-Squared Value: {0} Fitted Equation Type: {1} Equation(s) tested against: {2}".format(chiSquared,method,equations))
+		self.__copyButton=tkinter.Button(self.__chiSquaredWindow,text="Copy to clipboard",command=lambda: pyperclip.copy(rawtext))
+		if isinstance(equations,list):
+			for i in range(len(equations[:(len(equations)-1)])):
+				self.__tempLabel=tkinter.Label(self.__chiSquaredWindow,text="	• "+str(equations[i]),font=bodyFont).grid(row=6+i,column=0,columnspan=2,sticky="NW")
+			self.__continueButton.grid(row=6+i+1,column=1,sticky="SE")
+			self.__copyButton.grid(row=6+i+1,column=0,sticky="SW")
+		else:
+			self.__tempLabel=tkinter.Label(self.__chiSquaredWindow,text=str(equations),font=bodyFont).grid(row=6,column=0,columnspan=2,sticky="NW")
+			self.__continueButton.grid(row=6+1,column=1,sticky="SE")
+			self.__copyButton.grid(row=6+1,column=0,sticky="SW")
 
 	def getData(self):
 		data={}
