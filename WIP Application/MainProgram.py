@@ -312,7 +312,6 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			self.pointPen.stamp()
 			self.pointPen.pu()
 	def chiSquared(self,equations,method):
-		print("performing chi-squared test on ",equations,method)
 		data=self.getData()
 		chiSquared=0
 		if method == "B-splines":
@@ -320,31 +319,26 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		
 		for item in data:
 			if method=="B-splines":
-				print(data[item],type(data[item]))
-				if data[item]>knots[0]:
-					print("ye")
-				print(knots[0],type(knots[0]))
-				print(knots[1],type(knots[1]))
-				print(knots[2],type(knots[2]))
-				print(knots[3],type(knots[3]))
-				print(knots[4],type(knots[4]))
-				if knots[0]<item<knots[1]:
-					y=eval(self.__equation[0].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif knots[1]<item<knots[2]:
-					y=eval(self.__equation[1].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif knots[2]<item<knots[3]:
-					y=eval(self.__equation[2].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif knots[3]<item<knots[4]:
-					y=eval(self.__equation[3].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif knots[4]<item<knots[5]:
-					y=eval(self.__equation[4].replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				if item<knots[1]:
+					y=eval((self.__equation[0]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif item<knots[2]:
+					y=eval((self.__equation[1]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif item<knots[3]:
+					y=eval((self.__equation[2]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif item<knots[4]:
+					y=eval((self.__equation[3]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
+				elif item<knots[5]:
+					y=eval((self.__equation[4]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			else:
 				y=eval(self.__equation.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
 
 
-		print(chiSquared)
+		print("""Chi-Squared Test Results
+			Chi-Squared Value: {0}
+			Fitted Equation Type: {1}
+			Equation(s) tested against: {2}""".format(chiSquared,method,equations))
 
 
 	def getData(self):
