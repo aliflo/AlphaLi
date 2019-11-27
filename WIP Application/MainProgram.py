@@ -324,21 +324,19 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 			knots = equations[len(equations)-1]
 		for item in data:
 			if method=="B-splines":
-				print (item)
-				if item<knots[1]:
+				if item<=knots[1]:
 					y=eval((equations[0]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif item<knots[2]:
+				elif item<=knots[2]:
 					y=eval((equations[1]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif item<knots[3]:
+				elif item<=knots[3]:
 					y=eval((equations[2]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif item<knots[4]:
+				elif item<=knots[4]:
 					y=eval((equations[3]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
-				elif item<knots[5]:
+				elif item<=knots[5]:
 					y=eval((equations[4]).replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 				else:
-					y=item
+					y=data[item]
 			else:
-				print ("hit")
 				y=eval(equations.replace("x","("+str(item)+")").replace("e"+"("+str(item)+")"+"p","exp").replace("sympy","math"))
 			tempVal=((data[item]-y)**2)/y
 			chiSquared+=tempVal
