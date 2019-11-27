@@ -311,7 +311,7 @@ class Application(tkinter.Frame):#calling with tkinter.Frame . would be just Fra
 		self.pointPen.shapesize(0.08,0.08,0.08)
 		self.pointPen.width(5)
 		for item in data:
-			self.pointPen.goto(item,data[item])
+			self.pointPen.goto(item*self.__zfactor,data[item]*self.__zfactor)
 			self.pointPen.color("red")
 			self.pointPen.pd()
 			self.pointPen.begin_fill()
